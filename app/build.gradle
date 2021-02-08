@@ -1,0 +1,108 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+    defaultConfig {
+        applicationId "com.godox.light"
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        flavorDimensions "default"
+        buildConfigField 'String', 'PUBLICK_CHECK_UPDATE_REQUESTURL', '"http://www.egodox.com/android/godox_light/public/version.json"'
+        buildConfigField 'String', 'PRIVATE_CHECK_UPDATE_REQUESTURL', '"http://www.egodox.com/android/godox_light/private/version.json"'
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def SEP = "_"
+            def name = "GodoxLight"
+            def flavor = variant.productFlavors[0].name
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def version = variant.versionName
+            def versionCode = variant.versionCode
+            def date = new Date()
+            def formattedDate = date.format('yyyyMMdd_HHmm')
+            outputFileName = "${name}${SEP}${buildType}${SEP}${version}${SEP}${versionCode}${SEP}${formattedDate}${SEP}${flavor}.apk"
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file('/Volumes/Mac/Project/GodoxLight/godoxlight.jks')
+            storePassword 'godox#168'
+            keyPassword 'godox#ylb'
+            keyAlias = 'godox_light_key'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            buildConfigField "boolean", "LOG_DEBUG", 'false'
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    productFlavors {
+        play {
+            versionCode 1
+            versionName "1.0"
+            buildConfigField "boolean", "IS_PUBLIC", 'true'
+            ndk {
+                abiFilters 'armeabi-v7a'
+            }
+        }
+        beta {
+            versionCode 1
+            versionName "1.0"
+            buildConfigField "boolean", "IS_PUBLIC", 'false'
+            ndk {
+                abiFilters 'armeabi-v7a'
+            }
+        }
+    }
+    packagingOptions {
+        pickFirsts = ['META-INF/LICENSE']
+        merge 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+    }
+    dexOptions {
+        preDexLibraries false
+        javaMaxHeapSize "2g"
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':phototable')
+//    implementation 'com.huawei.multimedia:camerakit:1.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+}

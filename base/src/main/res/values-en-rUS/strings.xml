@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_device">Device added</string>
+    <string name="no_add_device">No device added</string>
+    <string name="message_location_disabled_warning">No bluetooth device found, enable location and retry?</string>
+    <string name="message_ble_state_disabled">Bluetooth is disabled, enable?</string>
+    <string name="enable">Enable</string>
+    <string name="ignore">Ignore</string>
+    <string name="goSetting">Go-Setting</string>
+    <string-array name="group_name">
+        <item>Living room</item>
+        <item>Kitchen</item>
+        <item>Master bedroom</item>
+        <item>Secondary bedroom</item>
+        <item>Balcony</item>
+        <item>Bathroom</item>
+        <item>Hallway</item>
+        <item>others</item>
+    </string-array>
+</resources>

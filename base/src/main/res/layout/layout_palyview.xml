@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="5dp"
+    >
+        <com.zlm.base.media.StatusButtom
+                android:id="@+id/ibPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/play"
+                android:layout_marginLeft="12dp"
+                android:padding="5dp"
+        />
+        <TextView
+                android:id="@+id/tvProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="00:00"
+                android:layout_marginLeft="5dp"/>
+
+
+        <com.zlm.base.media.CompatSeekbar
+                android:id="@+id/sbProgress"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:background="@null"
+                android:layout_height="wrap_content"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:progressDrawable="@drawable/video_seek_progress"
+                android:layout_gravity="center_vertical"
+                android:thumb="@drawable/video_seek_thumb"
+        />
+
+        <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="00:00"
+        />
+    </LinearLayout>
+    <ImageButton
+            android:id="@+id/ibtnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/playy"
+            android:layout_gravity="center"/>
+</FrameLayout>

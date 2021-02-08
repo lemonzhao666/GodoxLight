@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <com.godox.light.view.RectView
+        android:id="@+id/rectview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_vertical"/>
+    <FrameLayout
+        android:id="@+id/fl_light"
+        android:layout_width="wrap_content"
+        android:layout_height="160dp"
+        android:layout_marginLeft="100dp"
+        >
+        <com.godox.light.view.VerticalSeekBar
+            android:id="@+id/exposure_seek"
+            android:layout_width="wrap_content"
+            android:layout_height="160dp"
+            android:maxHeight="2px"
+            android:max="800"
+            android:progressDrawable="@color/theme"
+            android:thumb="@mipmap/light" />
+        <ImageView
+            android:id="@+id/iv_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/light"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+</FrameLayout>

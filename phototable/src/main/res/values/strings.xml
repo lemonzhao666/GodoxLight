@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">PhotoTable</string>
+    <string name="all">All</string>
+    <string name="photo">Image</string>
+    <string name="video">Video</string>
+    <string name="sharesingle">Shared videos can only be shared individually</string>
+    <string name="only_one_share">Only one type of image or video can be selected for sharing</string>
+    <string name="select_project">Select item</string>
+    <string name="has_select">Has selected</string>
+    <string name="project">project</string>
+    <string name="share">Share</string>
+    <string name="select">Select</string>
+    <string name="edit">Edit</string>
+    <string name="photo_id">Photo_id</string>
+    <string name="delete">Delete</string>
+    <string name="concel">Concel</string>
+    <string name="nophoto">No photo</string>
+    <string name="nophoto_novideo">No photo and video</string>
+    <string name="no_video">No video</string>
+    <string name="time">Time</string>
+    <string name="go">To</string>
+    <string name="share_too_mush">Do not share too many pictures</string>
+    <string name="photo_gallery">Photo gallery</string>
+</resources>

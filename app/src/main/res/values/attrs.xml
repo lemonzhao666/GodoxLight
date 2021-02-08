@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ColorView" >
+        <attr name="childW" format="dimension" />
+        <attr name="childH" format="dimension" />
+        <attr name="childTotalCount" format="integer" />
+        <attr name="childSpace" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="NounView">
+        <attr name="childNounW" format="integer" />
+        <attr name="childNounH" format="integer" />
+        <attr name="childNounSpaceCount" format="integer" />
+        <attr name="childNounTotalCount" format="integer" />
+        <attr name="childNounBorder" format="integer" />
+        <attr name="childNounSpace" format="integer" />
+    </declare-styleable>
+
+</resources>

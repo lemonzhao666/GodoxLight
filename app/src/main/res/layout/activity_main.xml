@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+ >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="9dp"
+            android:background="@mipmap/add" />
+
+        <Spinner
+            android:id="@+id/light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="35dp"
+            android:spinnerMode="dropdown" />
+
+        <ImageButton
+            android:id="@+id/iv_setting"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center_vertical|right"
+            android:background="@mipmap/setting" />
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="124dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="3dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_Iso1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISO:500"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/iso_m"
+                android:layout_marginLeft="7dp"/>
+
+            <TextView
+                android:id="@+id/tv_iso2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:text="1/2500s"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/below"
+            />
+        <com.godox.camera.WheelView
+            android:id="@+id/wheelview1"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+          />
+
+        <com.godox.camera.WheelView
+            android:id="@+id/wheelview2"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+         />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="124dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <com.godox.camera.ColorView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:childH="40dp"
+            app:childW="40dp"
+            app:childSpace="80"
+            app:childNounTotalCount="41"
+            />
+
+        <com.godox.camera.ColorView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:childH="40dp"
+            app:childSpace="80"
+            app:childTotalCount="13"
+            app:childW="40dp" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="72dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbtn_iso"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="41dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/selecter_rbtn_1"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/rbtn_trade"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="39dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/selecter_rbtn_2"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/rbtn_board"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="39dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/selecter_rbtn_3"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/rbtn_me"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="39dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/selecter_rbtn_4"
+            android:button="@null" />
+    </RadioGroup>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom">
+
+        <ImageButton
+            android:layout_width="44dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="11dp" />
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="@mipmap/take" />
+
+        <ImageButton
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="9dp"
+            android:layout_marginRight="16dp"
+            android:background="@mipmap/switch_camera" />
+    </FrameLayout>
+</FrameLayout>

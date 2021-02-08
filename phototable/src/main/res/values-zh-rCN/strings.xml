@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">PhotoTable</string>
+    <string name="all">全部</string>
+    <string name="photo">照片</string>
+    <string name="video">视频</string>
+    <string name="sharesingle">分享视频只能单个分享</string>
+    <string name="only_one_share">只能选择图片或者视频一种类型分享</string>
+    <string name="select_project">选择项目</string>
+    <string name="has_select">已选择</string>
+    <string name="project">项</string>
+    <string name="share">分享</string>
+    <string name="select">选择</string>
+    <string name="edit">编辑</string>
+    <string name="photo_id">图片序号</string>
+    <string name="delete">删除</string>
+    <string name="concel">取消</string>
+    <string name="nophoto">无图片</string>
+    <string name="nophoto_novideo">无图片和视频</string>
+    <string name="no_video">无视频</string>
+    <string name="time">时间</string>
+    <string name="go">至</string>
+    <string name="share_too_mush">分享图片不能过多</string>
+    <string name="photo_gallery">相册库</string>
+</resources>

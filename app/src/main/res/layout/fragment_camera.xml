@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <FrameLayout
+        android:id="@+id/fl_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+        <com.godox.light.view.AutoFitTextureView
+            android:id="@+id/textureview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <com.godox.light.view.GridLineView
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <com.godox.light.view.CountdownView
+        android:id="@+id/countdownview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+    />
+
+    <FrameLayout
+        android:id="@+id/fl_control"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp">
+
+            <ImageButton
+                android:id="@+id/add"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="9dp"
+                android:background="@mipmap/add" />
+
+            <Spinner
+                android:id="@+id/light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="35dp"
+                android:spinnerMode="dropdown" />
+
+            <ImageButton
+                android:id="@+id/iv_setting"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@mipmap/setting" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_ae"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="124dp"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_Iso1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="ISO:500"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="7dp"
+                        android:background="@mipmap/iso_m" />
+
+                    <TextView
+                        android:id="@+id/tv_iso2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="6dp"
+                        android:text="1/2500s"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <com.godox.light.view.CheckView
+                    android:id="@+id/checkview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dp"></com.godox.light.view.CheckView>
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/below" />
+
+            <com.godox.light.view.SelectView
+                android:id="@+id/selectview1"
+                android:layout_width="match_parent"
+                android:layout_height="44dp" />
+
+            <com.godox.light.view.SelectView
+                android:id="@+id/selectview2"
+                android:layout_width="match_parent"
+                android:layout_height="44dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_awb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="124dp"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <FrameLayout
+                android:id="@+id/fl_awb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <com.godox.light.view.ColorSelectView
+                    android:id="@+id/colorselectview"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+                    android:background="@color/transparent" />
+
+                <TextView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_stroke" />
+            </FrameLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_awb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_awb1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selecter_rbtn_awb_1"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_awb2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selecter_rbtn_awb_2"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_awb3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selecter_rbtn_awb_3"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_awb4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selecter_rbtn_awb_4"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_awb5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selecter_rbtn_awb_5"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_awb6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/selecter_rbtn_awb_6"
+                    android:button="@null" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="72dp"
+            android:clickable="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/rg_bottom_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckedTextView
+                        android:id="@+id/rbtn_iso"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginBottom="6dp"
+                        android:background="@drawable/selecter_rbtn_1"
+                        android:checked="false" />
+
+                    <CheckedTextView
+                        android:id="@+id/rbtn_trade"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginBottom="6dp"
+                        android:background="@drawable/selecter_rbtn_2"
+                        android:checked="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckedTextView
+                        android:id="@+id/rbtn_board"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="39dp"
+                        android:layout_marginBottom="6dp"
+                        android:background="@mipmap/time0" />
+
+                    <CheckedTextView
+                        android:id="@+id/rbtn_me"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="39dp"
+                        android:background="@drawable/selecter_rbtn_4"
+                        android:checked="false" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom"
+            android:clickable="true">
+
+            <ImageButton
+                android:id="@+id/ibtn_result"
+                android:layout_width="44dp"
+                android:layout_height="43dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="11dp"
+                android:background="@mipmap/image"
+                android:scaleType="centerCrop" />
+
+            <ImageButton
+                android:id="@+id/ibtn_take"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/selecter_ibtn_take" />
+
+            <ImageButton
+                android:id="@+id/ibtn_switch"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="9dp"
+                android:layout_marginRight="16dp"
+                android:background="@mipmap/switch_camera" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="270dp"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/ibtn_flash"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|bottom"
+                android:background="@drawable/selecter_flash_switch" />
+
+            <ImageButton
+                android:id="@+id/ibtn_light"
+                android:layout_width="50dp"
+                android:layout_height="55dp"
+                android:layout_gravity="right|bottom"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/selecter_light_switch" />
+        </LinearLayout>
+
+
+        <com.godox.light.view.FlashControlLayout
+            android:id="@+id/flashcontrollayout"
+            android:layout_width="wrap_content"
+            android:layout_height="380dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="270dp"
+            android:clickable="true"
+            android:visibility="gone" />
+
+        <com.godox.light.view.LightControlLayout
+            android:id="@+id/lightcontrollayout"
+            android:layout_width="wrap_content"
+            android:layout_height="380dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="270dp"
+            android:clickable="true"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</FrameLayout>

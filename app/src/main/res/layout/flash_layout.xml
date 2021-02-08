@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#aa000000">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:text="EV" />
+
+            <RadioGroup
+                android:id="@+id/rg_ev"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_black"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbtn_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="+4"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="+2"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:checked="false"
+                    android:gravity="center"
+                    android:text="-2"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="-4"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="5500K" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginTop="10dp">
+
+                <com.godox.light.view.LightControl
+                    android:id="@+id/lightcontrol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginRight="18dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/shape_light_center" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@mipmap/colse_light"
+        android:text="@string/close"
+        android:drawablePadding="2dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        />
+</LinearLayout>

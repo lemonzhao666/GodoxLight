@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="50dp"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+             >
+
+            <TextView
+                android:id="@+id/view_updateinforshow_dialog_infor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="5dp"
+                android:minHeight="20dp"
+                />
+
+            <TextView
+                android:id="@+id/view_updateinforshow_dialog_infor2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="5dp"
+                android:minHeight="20dp"
+                />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/line" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="33dp"
+            android:orientation="horizontal"
+            android:weightSum="1.0" >
+
+            <TextView
+                android:id="@+id/view_updateinforshow_dialog_cancel"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="暂时不要"
+                />
+
+            <TextView
+                android:id="@+id/view_updateinforshow_dialog_ok"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="立即更新"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

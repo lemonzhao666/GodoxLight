@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="add_device">已添加设备</string>
+    <string name="no_add_device">未添加设备</string>
+    <string name="message_location_disabled_warning">No bluetooth device found, enable location and retry?</string>
+    <string name="message_ble_state_disabled">蓝牙未开启, 开启?</string>
+    <string name="enable">确定</string>
+    <string name="ignore">忽略</string>
+    <string name="goSetting">去设置</string>
+    <string-array name="group_name">
+        <item>Living room</item>
+        <item>Kitchen</item>
+        <item>Master bedroom</item>
+        <item>Secondary bedroom</item>
+        <item>Balcony</item>
+        <item>Bathroom</item>
+        <item>Hallway</item>
+        <item>others</item>
+    </string-array>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.godox.light.view.HScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:background="@android:color/transparent">
+
+    <com.godox.light.view.ColorView
+        android:id="@+id/colorView"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        app:childH="40dp"
+        app:childW="40dp"
+        app:childSpace="80"
+        app:childTotalCount="15"
+       />
+</com.godox.light.view.HScrollView>

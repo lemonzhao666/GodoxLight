@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.godox.light.view.HScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:background="@android:color/transparent">
+
+    <com.godox.light.view.NounView
+        android:id="@+id/nounView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        app:childNounBorder="7"
+        app:childNounH="50"
+        app:childNounSpace="50"
+        app:childNounSpaceCount="10"
+        app:childNounTotalCount="50"
+        app:childNounW="2" />
+</com.godox.light.view.HScrollView>
