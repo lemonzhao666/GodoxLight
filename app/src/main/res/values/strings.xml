@@ -67,5 +67,11 @@
     <string name="isupdate">Currently, it is an operator network. Do you want to upgrade?</string>
     <string name="immediately_update">Update now</string>
     <string name="removing">Removing...</string>
+    <string name="aboutrf1">About RF1</string>
+    <string name="app_agreement">《Software license and service agreement》</string>
+    <string name="version">Version v</string>
+    <string name="SimplifiedChinese">Simplified Chinese</string>
+    <string name="followingsystem">Following System</string>
+    <string name="firmwareupdate">Firmware update</string>
 </resources>
 

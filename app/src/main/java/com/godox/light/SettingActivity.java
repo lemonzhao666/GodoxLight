@@ -2,19 +2,15 @@ package com.godox.light;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.blankj.utilcode.util.LanguageUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -32,6 +28,7 @@ public class SettingActivity extends BaseBackActivity {
     private TextView tvScale;
     private TextView tvGrid;
     private FrameLayout flAlbum;
+    private FrameLayout flAbout;
     private int mCurrentDialogStyle = com.qmuiteam.qmui.R.style.QMUI_Dialog;
     private int scale;
     private int lens;
@@ -39,7 +36,7 @@ public class SettingActivity extends BaseBackActivity {
     private QMUITipDialog tipDialog;
     private SPUtils spUtils;
     final String[] scale_items = new String[]{"4:3", "16:9", "1:1"};
-    String[] language_items ;
+    String[] language_items;
 
     private FrameLayout flAccount;
     private FrameLayout flConnect;
@@ -47,6 +44,8 @@ public class SettingActivity extends BaseBackActivity {
     private FrameLayout flLanguage;
     private TextView tvLanguage;
     private int lang;
+    private TextView tvCache;
+    private TextView tvLogout;
 
     @Override
     public int bindLayout() {
@@ -67,33 +66,36 @@ public class SettingActivity extends BaseBackActivity {
         flAccount = findViewById(R.id.fl_account);
         flConnect = findViewById(R.id.fl_connect);
         flLanguage = findViewById(R.id.fl_language);
+        tvCache = findViewById(R.id.tv_cache);
+        flAbout = findViewById(R.id.fl_about);
+        tvLogout = findViewById(R.id.tv_logout);
         lens_items = new String[]{getString(R.string.nulll), getString(R.string.gridd), getString(R.string.duijiaoxian), getString(R.string.center)};
     }
 
     @Override
     public void doBusiness() {
+        try {
+            tvCache.setText(CacheUtil.getTotalCacheSize(this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         language_items = new String[]{getString(R.string.cn), getString(R.string.en)};
         spUtils = SPUtils.getInstance();
         scale = spUtils.getInt("scale", scale);
         lens = spUtils.getInt("lens", lens);
-        lang = spUtils.getInt("language", -1);
-        if(lang == -1){
-            Locale locale = LanguageUtils.getCurrentLocale();
-            if(locale.getLanguage().equals(Locale.SIMPLIFIED_CHINESE.getLanguage())){
-                lang = 0;
-                tvLanguage.setText(R.string.cn);
-            }else if(locale.getLanguage().equals(Locale.ENGLISH.getLanguage())){
-                lang = 1;
-                tvLanguage.setText(R.string.en);
-            }
-        }else if(lang == 0){
-            tvLanguage.setText(R.string.cn);
-        }else if(lang == 1){
-            tvLanguage.setText(R.string.en);
-        }
-
         tvScale.setText(scale_items[scale]);
         tvGrid.setText(lens_items[lens]);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String language = getResources().getConfiguration().locale.getLanguage();
+        if(language.equals(Locale.SIMPLIFIED_CHINESE.getLanguage())){
+            tvLanguage.setText(R.string.SimplifiedChinese);
+        }else if(language.equals(Locale.ENGLISH.getLanguage())){
+            tvLanguage.setText("English");
+        }
     }
 
     @Override
@@ -113,12 +115,29 @@ public class SettingActivity extends BaseBackActivity {
         flClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tipDialog = new QMUITipDialog.Builder(SettingActivity.this)
-                        .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
-                        .setTipWord(getString(R.string.cleanning))
-                        .create();
-                tipDialog.show();
-                handler.sendEmptyMessageDelayed(0, 2000);
+                try {
+                    if (!CacheUtil.getTotalCacheSize(mActivity).equals("0K")) {
+                        tipDialog = new QMUITipDialog.Builder(SettingActivity.this)
+                                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                                .setTipWord(getString(R.string.cleanning))
+                                .create();
+                        tipDialog.show();
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                CacheUtil.clearAllCache(mActivity);
+                                handler.sendEmptyMessage(0);
+                            }
+                        }.start();
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         flScale.setOnClickListener(new View.OnClickListener() {
@@ -144,29 +163,8 @@ public class SettingActivity extends BaseBackActivity {
         flLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                QMUIDialog qmuiDialog = new QMUIDialog.CheckableDialogBuilder(SettingActivity.this)
-                        .setCheckedIndex(lang)
-                        .setSkinManager(QMUISkinManager.defaultInstance(SettingActivity.this))
-                        .addItems(language_items, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                tvLanguage.setText(language_items[which]);
-                                spUtils.put("language", which);
-                                dialog.dismiss();
-                                Resources resources = getResources();
-                                DisplayMetrics dm = resources.getDisplayMetrics();
-                                Configuration config = resources.getConfiguration();
-                                if(which == 0){
-                                    config.setLocale(Locale.SIMPLIFIED_CHINESE);
-                                }else{
-                                    config.setLocale(Locale.ENGLISH);
-                                }
-                                resources.updateConfiguration(config, dm);
-
-                            }
-                        })
-                        .create(mCurrentDialogStyle);
-                qmuiDialog.show();
+                startActivity(new Intent(mActivity, SelectLangActivity.class));
+                finish();
             }
         });
 
@@ -188,10 +186,22 @@ public class SettingActivity extends BaseBackActivity {
                         .create(mCurrentDialogStyle).show();
             }
         });
+        tvLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+            }
+        });
         flAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingActivity.this, PhotoTableActivity.class));
+            }
+        });
+        flAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingActivity.this, AboutActivity.class));
             }
         });
     }
@@ -207,10 +217,11 @@ public class SettingActivity extends BaseBackActivity {
                             .setTipWord(getString(R.string.clean_success))
                             .create();
                     dialog.show();
-                    handler.sendEmptyMessageDelayed(1, 1000);
+                    handler.sendEmptyMessage(1);
                     break;
                 case 1:
                     dialog.dismiss();
+                    tvCache.setText("0k");
                     break;
             }
 

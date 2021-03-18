@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
@@ -57,8 +58,9 @@ public class CameraActivity extends BaseActivity implements EventListener<String
 
     private void requirePermission() {
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-                || !(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+                || !(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+                ||!(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA ,Manifest.permission.ACCESS_FINE_LOCATION};
             ActivityCompat.requestPermissions(this, permissions, RC_PERMISSION);
         } else {
             getSupportFragmentManager().beginTransaction()
@@ -74,9 +76,10 @@ public class CameraActivity extends BaseActivity implements EventListener<String
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RC_PERMISSION && grantResults.length == 2
+        if (requestCode == RC_PERMISSION && grantResults.length == 3
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, CameraFragment.newInstance())
                     .commit();
@@ -253,7 +256,8 @@ public class CameraActivity extends BaseActivity implements EventListener<String
                             String downloadUrl = versionInfoObject.optString("downloadUrl");
                             String descInfo = versionInfoObject.optString("descInfo");
                             if (!TextUtils.isEmpty(downloadUrl) || downloadUrl != null) {
-                                if (PublicUtil.getAppVersionCode(mActivity) < versionCode) {
+                                LogUtils.dTag(TAG,"getAppVersionCode = "+PublicUtil.getAppVersionCode(mActivity)+" versionCode = "+versionCode);
+                                if (AppUtils.getAppVersionCode() < versionCode) {
                                     showNoticeDialog(versionName, descInfo, downloadUrl);
                                 }
                             }

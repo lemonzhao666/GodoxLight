@@ -13,6 +13,6 @@
         <com.godox.light.view.LightView
             android:id="@+id/lightview"
             android:layout_width="50px"
-            android:layout_height="3250px" />
+            android:layout_height="3750px" />
     </LinearLayout>
 </com.godox.light.view.VScrollView>

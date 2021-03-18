@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="10dp"></com.godox.light.view.CheckView>
+                    android:layout_marginRight="10dp"/>
             </FrameLayout>
 
             <ImageView

@@ -53,9 +53,5 @@ public class ConnectActivity extends BaseBackActivity implements EventListener<S
             }
         });
     }
-
-
-
-
 }
 

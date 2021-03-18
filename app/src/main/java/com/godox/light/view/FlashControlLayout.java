@@ -15,6 +15,8 @@ public class FlashControlLayout extends LinearLayout {
     private LightControl lightControl;
     private TextView tvClose;
     private OnCloseControlLayoutListener onCloseControlLayoutListener;
+    private OnCCTChangeListener OnCCTChangeListener;
+    private OnEVChangeListener onEVChangeListener;
     private RadioGroup rgEV;
 
     public FlashControlLayout(Context context) {
@@ -36,7 +38,7 @@ public class FlashControlLayout extends LinearLayout {
             @Override
             public void change(int value) {
                 tvTempera.setText(value + "K");
-
+                OnCCTChangeListener.cctChange(value);
             }
         });
         tvClose.setOnClickListener(new OnClickListener() {
@@ -49,7 +51,35 @@ public class FlashControlLayout extends LinearLayout {
         rgEV.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                switch (checkedId) {
+                    case R.id.rbtn_1:
+                        onEVChangeListener.evChange(2f);
+                        break;
+                    case R.id.rbtn_2:
+                        onEVChangeListener.evChange(1.5f);
+                        break;
+                    case R.id.rbtn_3:
+                        onEVChangeListener.evChange(1f);
+                        break;
+                    case R.id.rbtn_4:
+                        onEVChangeListener.evChange(0.5f);
+                        break;
+                    case R.id.rbtn_5:
+                        onEVChangeListener.evChange(0);
+                        break;
+                    case R.id.rbtn_6:
+                        onEVChangeListener.evChange(-0.5f);
+                        break;
+                    case R.id.rbtn_7:
+                        onEVChangeListener.evChange(-1f);
+                        break;
+                    case R.id.rbtn_8:
+                        onEVChangeListener.evChange(-1.5f);
+                        break;
+                    case R.id.rbtn_9:
+                        onEVChangeListener.evChange(-2f);
+                        break;
+                }
             }
         });
     }
@@ -60,5 +90,21 @@ public class FlashControlLayout extends LinearLayout {
 
     public interface OnCloseControlLayoutListener {
         void closeControlLayout();
+    }
+
+    public void setOnCCTChangeListener(OnCCTChangeListener onCCTChangeListener) {
+        this.OnCCTChangeListener = onCCTChangeListener;
+    }
+
+    public void setOnEVChangeListener(OnEVChangeListener onEVChangeListener) {
+        this.onEVChangeListener = onEVChangeListener;
+    }
+
+    public interface OnCCTChangeListener {
+        void cctChange(int value);
+    }
+
+    public interface OnEVChangeListener {
+        void evChange(float value);
     }
 }

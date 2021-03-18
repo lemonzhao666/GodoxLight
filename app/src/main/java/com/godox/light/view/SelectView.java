@@ -3,6 +3,7 @@ package com.godox.light.view;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -20,7 +21,7 @@ public class SelectView extends FrameLayout {
     private int perNounValue;
     private int nounTotalValue;
     private boolean isScroll;
-
+    boolean canTouch;
     public boolean isScroll() {
         return isScroll;
     }
@@ -104,5 +105,16 @@ public class SelectView extends FrameLayout {
         float scroll = currentNounValue * (nounView.getNoPaddingWidth() / Float.valueOf(nounTotalValue));
         LogUtils.dTag(TAG, "scroll = " + scroll);
         scrollView.smoothScrollTo((int) scroll, 0);
+    }
+
+    public void setCanTouchEvent(boolean canTouch){
+        this.canTouch = canTouch;
+    }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if(canTouch){
+            return super.onInterceptTouchEvent(ev);
+        }
+        return true;
     }
 }

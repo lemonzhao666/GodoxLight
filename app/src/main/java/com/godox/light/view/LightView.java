@@ -42,13 +42,13 @@ public class LightView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         top = ConvertUtils.dp2px(150) - 25;
-        for (int i = 0; i <= 32; i++) {
+        for (int i = 0; i <= 37; i++) {
             if (i == 0) {
                 top += 25;
             } else {
                 top += 100;
             }
-            int[] colors = PublicUtil.temperatureToColor(i * 100 + 3300);
+            int[] colors = PublicUtil.temperatureToColor(i * 100 + 2800);
             mPaint = new Paint();
             mPaint.setColor(Color.rgb(colors[0], colors[1], colors[2]));
             canvas.drawCircle(w / 2, top, 25, mPaint);

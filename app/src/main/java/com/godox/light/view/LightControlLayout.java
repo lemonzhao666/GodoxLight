@@ -75,6 +75,14 @@ public class LightControlLayout extends LinearLayout {
         this.onCloseControlLayoutListener = onCloseControlLayoutListener;
     }
 
+    public void setDIM(int dim) {
+        verticalSeekBar.setProgress(dim);
+    }
+
+    public void setCCT(int cct) {
+        lightControl.setScrollPosition(cct - 2800);
+    }
+
     public interface OnCloseControlLayoutListener {
         void closeControlLayout();
     }

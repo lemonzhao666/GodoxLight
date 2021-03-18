@@ -26,68 +26,109 @@
 
             <RadioGroup
                 android:id="@+id/rg_ev"
-                android:layout_width="20dp"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/bg_black"
                 android:orientation="vertical">
-
                 <RadioButton
                     android:id="@+id/rbtn_1"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="33dp"
                     android:background="@drawable/selecter_flash"
                     android:button="@null"
-                    android:checked="true"
                     android:gravity="center"
-                    android:text="+4"
+                    android:text="+2"
+                    android:textSize="11sp"
                     android:textColor="@drawable/selecter_rbtn_text" />
 
                 <RadioButton
                     android:id="@+id/rbtn_2"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="33dp"
                     android:background="@drawable/selecter_flash"
                     android:button="@null"
-                    android:checked="false"
                     android:gravity="center"
-                    android:text="+2"
+                    android:text="+1.5"
+                    android:textSize="11sp"
                     android:textColor="@drawable/selecter_rbtn_text" />
-
                 <RadioButton
                     android:id="@+id/rbtn_3"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="33dp"
                     android:background="@drawable/selecter_flash"
                     android:button="@null"
-                    android:checked="false"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="+1"
+                    android:textSize="11sp"
                     android:textColor="@drawable/selecter_rbtn_text" />
 
                 <RadioButton
                     android:id="@+id/rbtn_4"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="33dp"
                     android:background="@drawable/selecter_flash"
                     android:button="@null"
-                    android:checked="false"
                     android:gravity="center"
-                    android:text="-2"
+                    android:text="+0.5"
+                    android:textSize="11sp"
                     android:textColor="@drawable/selecter_rbtn_text" />
-
                 <RadioButton
                     android:id="@+id/rbtn_5"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="33dp"
                     android:background="@drawable/selecter_flash"
                     android:button="@null"
                     android:gravity="center"
-                    android:text="-4"
+                    android:text="0"
+                    android:textSize="11sp"
                     android:textColor="@drawable/selecter_rbtn_text" />
 
+                <RadioButton
+                    android:id="@+id/rbtn_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="-0.5"
+                    android:textSize="11sp"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:textSize="11sp"
+                    android:text="-1"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="-1.5"
+                    android:textSize="11sp"
+                    android:textColor="@drawable/selecter_rbtn_text" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="33dp"
+                    android:background="@drawable/selecter_flash"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="-2"
+                    android:textSize="11sp"
+                    android:textColor="@drawable/selecter_rbtn_text" />
             </RadioGroup>
         </LinearLayout>
 
