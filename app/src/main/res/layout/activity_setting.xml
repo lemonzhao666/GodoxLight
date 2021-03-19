@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp"
     tools:context=".SettingActivity">
 
     <FrameLayout
@@ -21,7 +20,7 @@
             android:textColor="#ff000000"
             android:textSize="14sp" />
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
@@ -266,12 +265,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="80dp"
-            android:background="#aa000000"
-            android:paddingLeft="40dp"
-            android:paddingTop="5dp"
-            android:paddingRight="40dp"
-            android:paddingBottom="5dp"
+            android:background="@drawable/shape_logout"
+            android:paddingLeft="55dp"
+            android:paddingTop="8dp"
+            android:paddingRight="55dp"
+            android:paddingBottom="8dp"
             android:text="退出登录"
+            android:layout_marginRight="15dp"
             android:textColor="@color/white" />
     </FrameLayout>
 

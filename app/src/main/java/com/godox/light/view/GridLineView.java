@@ -92,7 +92,7 @@ public class GridLineView extends View {
         mPaint.setDither(true);
         mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setStrokeWidth((float) 2.0);
+        mPaint.setStrokeWidth((float) 1.5);
     }
 
     public void setWh(int w, int h, int type) {

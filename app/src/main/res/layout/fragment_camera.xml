@@ -3,7 +3,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="#55000000">
 
     <FrameLayout
         android:id="@+id/fl_preview"
@@ -28,8 +28,7 @@
         android:id="@+id/countdownview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-    />
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/fl_control"
@@ -69,10 +68,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="124dp"
+            android:layout_marginBottom="126dp"
             android:clickable="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:background="@color/transparent_88"
             android:visibility="gone">
 
             <FrameLayout
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp" />
             </FrameLayout>
 
             <ImageView
@@ -144,9 +144,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="124dp"
+            android:layout_marginBottom="126dp"
             android:clickable="true"
             android:orientation="vertical"
+            android:background="@color/transparent_88"
             android:visibility="gone">
 
             <FrameLayout
@@ -229,7 +230,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="72dp"
+            android:layout_marginBottom="70dp"
+            android:background="@color/transparent_99"
             android:clickable="true">
 
             <LinearLayout
@@ -297,7 +299,7 @@
                 android:layout_width="44dp"
                 android:layout_height="43dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="11dp"
+                android:layout_gravity="center_vertical"
                 android:background="@mipmap/image"
                 android:scaleType="centerCrop" />
 
@@ -305,16 +307,14 @@
                 android:id="@+id/ibtn_take"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:background="@drawable/selecter_ibtn_take" />
 
             <ImageButton
                 android:id="@+id/ibtn_switch"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="9dp"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="16dp"
                 android:background="@mipmap/switch_camera" />
         </FrameLayout>
@@ -361,7 +361,7 @@
             android:layout_gravity="right|bottom"
             android:layout_marginBottom="270dp"
             android:clickable="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 

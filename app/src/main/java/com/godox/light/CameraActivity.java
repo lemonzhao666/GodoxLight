@@ -123,7 +123,6 @@ public class CameraActivity extends BaseActivity implements EventListener<String
             CameraParamList.getInstance().getCameraParamList().clear();
             CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
             String[] cameraIdList = cameraManager.getCameraIdList();
-            CameraParamList cameraParamList = CameraParamList.getInstance();
             for (String id : cameraIdList) {
                 CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(id);
                 Integer facing = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING);
