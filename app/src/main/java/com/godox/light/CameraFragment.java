@@ -186,9 +186,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private byte currentEVSend;
     private boolean isSent = true;
     private boolean flash_open = true;
-    private boolean light_open = true;
+    private boolean light_open = false;
     private boolean isTakeComplete = true;
-    private boolean isFristLight =true;
+    private boolean isFristLight = true;
 
     public static CameraFragment newInstance() {
         return new CameraFragment();
@@ -215,14 +215,18 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         updataNodeInfo();
         spinnerAdapter.notifyDataSetChanged();
         MeshService.getInstance().autoConnect(new AutoConnectParameters());
-        flash_open = spUtils.getBoolean("flash_open", true);
-        light_open = spUtils.getBoolean("light_open", true);
         if (flash_open) {
             ibtnFlash.setSelected(true);
         } else {
             ibtnFlash.setSelected(false);
         }
-        if (listArr.size() > 0&&isFristLight) {
+        if (light_open) {
+            ibtnLight.setSelected(true);
+        } else {
+            ibtnLight.setSelected(false);
+        }
+        if (listArr.size() > 0 && isFristLight) {
+            LogUtils.dTag(TAG, "light_open = " + light_open);
             if (light_open) {
                 ibtnLight.setSelected(true);
             } else {
@@ -494,10 +498,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void onOrientationChanged(int orientationn) {
                 orientation = orientationn;
-                LogUtils.dTag(TAG,"RequestedOrientation = "+mActivity.getRequestedOrientation());
+                LogUtils.dTag(TAG, "RequestedOrientation = " + mActivity.getRequestedOrientation());
             }
         };
-
 
 
         listArr = new ArrayList<>();
@@ -513,7 +516,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private void changeLayoutOrientation(int orientation) {
 
     }
-//    private void setRotationAnimation(float start, float end) {
+
+    //    private void setRotationAnimation(float start, float end) {
 //        ValueAnimator rotationAnimation = ValueAnimator.ofFloat(start, end);
 //        rotationAnimation.setDuration(300);
 //        rotationAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -596,7 +600,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 ibtnLight.setSelected(false);
                 llControl.setVisibility(View.VISIBLE);
                 LightControl.sendLightStatusMessage(1, currentDeviceMesh);
-                spUtils.put("light_open", false);
                 light_open = false;
             }
         });
@@ -633,7 +636,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 } else if (currentEV == -2) {
                     currentEVSend = 0;
                 }
-                LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDM, currentDeviceMesh);
+                LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
             }
         });
 
@@ -646,12 +649,15 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         ibtnFlash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.isSelected()) {
+                if (v.isSelected()) {//开
+                    LogUtils.dTag(TAG, "currentEV = " + currentEV + " currentCCT = " + currentCCT);
+                    flashControlLayout.setEV(currentEV);
+                    flashControlLayout.setCCT(currentCCT * 100);
                     flashControlLayout.setVisibility(View.VISIBLE);
                     llControl.setVisibility(View.GONE);
-                } else {
+                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
+                } else { //打开
                     v.setSelected(true);
-                    spUtils.put("flash_open", true);
                     flash_open = true;
                 }
             }
@@ -665,10 +671,10 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     lightControlLayout.setCCT(currentCCT * 100);
                     lightControlLayout.setVisibility(View.VISIBLE);
                     llControl.setVisibility(View.GONE);
+                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
                 } else {
                     v.setSelected(true);
                     LightControl.sendLightStatusMessage(0, currentDeviceMesh);
-                    spUtils.put("light_open", true);
                     light_open = true;
                 }
             }
@@ -681,7 +687,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 flashControlLayout.setVisibility(View.GONE);
                 ibtnFlash.setSelected(false);
                 llControl.setVisibility(View.VISIBLE);
-                spUtils.put("flash_open", false);
                 flash_open = false;
             }
         });
@@ -809,8 +814,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     currentCCT = 40;
                     currentEV = 0f;
                     currentEVSend = 0;
-                    LightControl.sendLightMeshMessage(currentDM,currentCCT,currentDeviceMeshh);
-                    handler.postDelayed(sentFlashRunnable,300);
+                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
                 }
                 currentDeviceMesh = currentDeviceMeshh;
             }
@@ -1596,7 +1600,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private Runnable sentFlashRunnable = new Runnable() {
         @Override
         public void run() {
-            LightControl.sendFlashEvMeshMessage(currentEVSend, currentDM, currentCCT, currentDeviceMesh);
+            LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDM, currentDeviceMesh);
         }
     };
 }

@@ -30,7 +30,7 @@ public class SettingActivity extends BaseBackActivity {
     private FrameLayout flAlbum;
     private FrameLayout flAbout;
     private int mCurrentDialogStyle = com.qmuiteam.qmui.R.style.QMUI_Dialog;
-    private int scale;
+    private int scale = 1;
     private int lens;
     private QMUITipDialog dialog;
     private QMUITipDialog tipDialog;
@@ -91,9 +91,9 @@ public class SettingActivity extends BaseBackActivity {
     protected void onResume() {
         super.onResume();
         String language = getResources().getConfiguration().locale.getLanguage();
-        if(language.equals(Locale.SIMPLIFIED_CHINESE.getLanguage())){
+        if (language.equals(Locale.SIMPLIFIED_CHINESE.getLanguage())) {
             tvLanguage.setText(R.string.SimplifiedChinese);
-        }else if(language.equals(Locale.ENGLISH.getLanguage())){
+        } else if (language.equals(Locale.ENGLISH.getLanguage())) {
             tvLanguage.setText("English");
         }
     }
