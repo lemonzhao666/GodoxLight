@@ -136,8 +136,20 @@
 -keepclassmembers class * extends android.webkit.webViewClient {
     public void *(android.webkit.webView, jav.lang.String);
 }
-
-
+-keep class com.telink.ble.mesh.**
+-keepclassmembers class com.telink.ble.mesh.**{
+    *;
+}
+-keepclasseswithmembernames class com.telink.ble.mesh.**
+-keep class com.telink.ble.mesh.**
+-keepclassmembers class com.telink.ble.mesh.**{
+    *;
+}
+-keepclasseswithmembernames class org.spongycastle.**
+-keep class org.spongycastle.**
+-keepclassmembers class org.spongycastle.**{
+    *;
+}
 #butterknife
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
