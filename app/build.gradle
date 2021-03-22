@@ -50,7 +50,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
+//            shrinkResources true
             buildConfigField "boolean", "LOG_DEBUG", 'false'
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
