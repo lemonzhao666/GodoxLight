@@ -16,8 +16,9 @@ public class UnAddDeviceAdapter extends BaseQuickAdapter<NodeInfo, BaseViewHolde
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, NodeInfo item) {
-        helper.setText(R.id.tv_name, "0x"+Integer.toHexString(item.meshAddress) + "  " + item.macAddress);
-        helper.setText(R.id.btn_connect,mContext.getString(R.string.add));
+        int len = item.macAddress.length();
+        helper.setText(R.id.tv_name,"GDFLASH_"+item.macAddress.substring(len - 5, len-3)+ item.macAddress.substring(len - 2, len));
+        helper.setText(R.id.btn_connect, mContext.getString(R.string.add));
         helper.addOnClickListener(R.id.btn_connect);
     }
 }

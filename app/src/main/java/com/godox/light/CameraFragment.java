@@ -636,7 +636,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 } else if (currentEV == -2) {
                     currentEVSend = 0;
                 }
-                LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
+                LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDeviceMesh);
             }
         });
 
@@ -655,7 +655,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     flashControlLayout.setCCT(currentCCT * 100);
                     flashControlLayout.setVisibility(View.VISIBLE);
                     llControl.setVisibility(View.GONE);
-                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
+                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDeviceMesh);
                 } else { //打开
                     v.setSelected(true);
                     flash_open = true;
@@ -671,7 +671,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     lightControlLayout.setCCT(currentCCT * 100);
                     lightControlLayout.setVisibility(View.VISIBLE);
                     llControl.setVisibility(View.GONE);
-                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
+                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,   currentDeviceMesh);
                 } else {
                     v.setSelected(true);
                     LightControl.sendLightStatusMessage(0, currentDeviceMesh);
@@ -814,7 +814,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     currentCCT = 40;
                     currentEV = 0f;
                     currentEVSend = 0;
-                    LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT,  currentDM, currentDeviceMesh);
+                    LightControl.sendLightMeshMessage(currentDM, currentCCT, currentDeviceMesh);
+                    mainHandler.postDelayed(sentFlashRunnable, 3000);
                 }
                 currentDeviceMesh = currentDeviceMeshh;
             }
@@ -1600,7 +1601,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private Runnable sentFlashRunnable = new Runnable() {
         @Override
         public void run() {
-            LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDM, currentDeviceMesh);
+            LightControl.sendFlashEvMeshMessage(currentEVSend, currentCCT, currentDeviceMesh);
         }
     };
 }

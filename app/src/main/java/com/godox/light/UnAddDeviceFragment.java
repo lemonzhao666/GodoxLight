@@ -87,6 +87,16 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
         TelinkMeshApplication.getInstance().addEventListener(ScanEvent.EVENT_TYPE_SCAN_TIMEOUT, this);
         TelinkMeshApplication.getInstance().addEventListener(ScanEvent.EVENT_TYPE_DEVICE_FOUND, this);
         mesh = TelinkMeshApplication.getInstance().getMeshInfo();
+//
+//        Flowable.interval(2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<Long>() {
+//                    @Override
+//                    public void accept(@NonNull Long aLong) throws Exception {
+//                        Log.e("------>",(aLong++)+"");
+//                    }
+
+
+
         startScan();
     }
 
