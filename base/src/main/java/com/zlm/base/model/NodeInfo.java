@@ -82,6 +82,8 @@ public class NodeInfo implements Serializable {
      * primary element unicast address
      */
     public int meshAddress;
+    public String  meshAddressHex;
+
 
     /**
      * mac address

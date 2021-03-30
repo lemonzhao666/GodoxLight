@@ -26,7 +26,7 @@ public class LightControl {
 
     static void sendLightMeshMessage(byte currentDM, byte currentCCT, int currentDeviceMesh) {
         byte[] bArr = new byte[8];
-        byte[] bArr2 = {(byte) 0xF0, currentDM, currentCCT, 50, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
+        byte[] bArr2 = {(byte) 0xF0, currentDM, currentCCT, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
         LogUtils.dTag(TAG, "send = " + PublicUtil.toHexString(bArr) + " currentDM = " + currentDM + " currentCCT = " + currentCCT);

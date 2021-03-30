@@ -47,13 +47,15 @@
                 android:layout_marginLeft="9dp"
                 android:background="@mipmap/add" />
 
-            <Spinner
-                android:id="@+id/light"
+            <TextView
+                android:id="@+id/tv_device"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="35dp"
-                android:spinnerMode="dropdown" />
+                android:layout_marginLeft="40dp"
+                android:textSize="10sp"
+                android:text="选择设备查看参数"
+                android:textColor="@color/white"/>
 
             <ImageButton
                 android:id="@+id/iv_setting"
@@ -365,14 +367,4 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 </FrameLayout>

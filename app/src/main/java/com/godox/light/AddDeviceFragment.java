@@ -3,12 +3,14 @@ package com.godox.light;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.telink.ble.mesh.core.message.config.NodeResetMessage;
@@ -31,7 +33,7 @@ import java.util.List;
 
 
 public class AddDeviceFragment extends BaseFragment implements EventListener<String> {
-
+    private ImageButton ibtnRight;
     private List<NodeInfo> nodeInfos;
     private AddDeviceAdapter addDeviceAdapter;
     private NodeInfo currentNodeInfo;
@@ -40,9 +42,7 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
     private QMUITipDialog tipDialog;
 
     @Override
-    public void initData(Bundle bundle) {
-
-    }
+    public void initData(Bundle bundle) {}
 
     @Override
     public int bindLayout() {
@@ -51,6 +51,7 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
 
     @Override
     public void initView(Bundle savedInstanceState, View view) {
+        ibtnRight = ((ConnectActivity) getActivity()).ivRight;
         RecyclerView rvDevice = view.findViewById(R.id.rv_connected_device);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         rvDevice.setLayoutManager(layoutManager);
@@ -58,15 +59,17 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
         nodeInfos = new ArrayList<>();
         nodeInfos = TelinkMeshApplication.getInstance().getMeshInfo().nodes;
         addDeviceAdapter = new AddDeviceAdapter(R.layout.recycleview_item_device, nodeInfos);
-        rvDevice.addItemDecoration(new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL));
+        rvDevice.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         rvDevice.setAdapter(addDeviceAdapter);
     }
 
     @Override
     public void doBusiness() {
         TelinkMeshApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
+        TelinkMeshApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_RESET, this);
         TelinkMeshApplication.getInstance().addEventListener(NodeStatusChangedEvent.EVENT_TYPE_NODE_STATUS_CHANGED, this);
         TelinkMeshApplication.getInstance().addEventListener(AutoConnectEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
+
     }
 
     @Override
@@ -78,7 +81,20 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
                 kickOut();
             }
         });
-
+        ibtnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int appKeyIndex = TelinkMeshApplication.getInstance().getMeshInfo().getDefaultAppKeyIndex();
+                OnOffGetMessage message = OnOffGetMessage.getSimple(0xFFFF, appKeyIndex, /*rspMax*/ 0);
+                boolean cmdSent = MeshService.getInstance().sendMeshMessage(message);
+                if (cmdSent) {
+                    for (NodeInfo deviceInfo : nodeInfos) {
+                        deviceInfo.setOnOff(-1);
+                    }
+                    addDeviceAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -123,17 +139,22 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
     @Override
     public void performed(final Event<String> event) {
         if (event.getType().equals(MeshEvent.EVENT_TYPE_DISCONNECTED)) {
+            LogUtils.dTag(TAG, "EVENT_TYPE_DISCONNECTED");
             if (kickDirect) {
                 onKickOutFinish();
             }
             addDeviceAdapter.resetDevices(TelinkMeshApplication.getInstance().getMeshInfo().nodes);
         } else if (event.getType().equals(NodeResetStatusMessage.class.getName())) {
+            LogUtils.dTag(TAG, "NodeResetStatusMessage");
             if (!kickDirect) {
                 onKickOutFinish();
             }
-        } else if (event.getType().equals(NodeStatusChangedEvent.EVENT_TYPE_NODE_STATUS_CHANGED)) {
+        } else if (event.getType().equals(NodeStatusChangedEvent.EVENT_TYPE_NODE_STATUS_CHANGED)
+                || event.getType().equals(MeshEvent.EVENT_TYPE_MESH_RESET)) {
+            LogUtils.dTag(TAG, "NODE_STATUS_CHANGED");
             addDeviceAdapter.resetDevices(TelinkMeshApplication.getInstance().getMeshInfo().nodes);
         } else if (event.getType().equals(AutoConnectEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN)) {
+            LogUtils.dTag(TAG, "EVENT_TYPE_AUTO_CONNECT_LOGIN");
             AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
             if (!AppSettings.ONLINE_STATUS_ENABLE) {
                 MeshService.getInstance().getOnlineStatus();

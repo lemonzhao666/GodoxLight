@@ -73,8 +73,8 @@ android {
             }
         }
         beta {
-            versionCode 6
-            versionName "1.0.6"
+            versionCode 7
+            versionName "1.0.7"
             buildConfigField "boolean", "IS_PUBLIC", 'false'
             ndk {
                 abiFilters 'armeabi-v7a'
@@ -94,6 +94,7 @@ android {
     aaptOptions {
         cruncherEnabled = false
     }
+
     dexOptions {
         preDexLibraries false
         javaMaxHeapSize "2g"

@@ -41,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
     private AlertDialog bleStateDialog;
     private TextView waitingTip;
     private AlertDialog.Builder confirmDialogBuilder;
+    protected TelinkMeshApplication meshApplication;
 
 
     @SuppressLint("ResourceAsColor")
@@ -55,8 +56,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
         initData(bundle);
         setBaseView(bindLayout());
         ButterKnife.bind(this);
-        TelinkMeshApplication.getInstance().addEventListener(ScanEvent.EVENT_TYPE_SCAN_LOCATION_WARNING, this);
-        TelinkMeshApplication.getInstance().addEventListener(BluetoothEvent.EVENT_TYPE_BLUETOOTH_STATE_CHANGE, this);
+        meshApplication = TelinkMeshApplication.getInstance();
+        meshApplication.addEventListener(ScanEvent.EVENT_TYPE_SCAN_LOCATION_WARNING, this);
+        meshApplication.addEventListener(BluetoothEvent.EVENT_TYPE_BLUETOOTH_STATE_CHANGE, this);
         initView(savedInstanceState, contentView);
         netService = RetrofitHelper.getService();
         doBusiness();

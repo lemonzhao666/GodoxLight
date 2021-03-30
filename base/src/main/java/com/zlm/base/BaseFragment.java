@@ -2,6 +2,7 @@ package com.zlm.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.blankj.utilcode.util.LogUtils;
 
 public abstract class BaseFragment extends Fragment implements IBaseView {
     protected String TAG = "BaseFragment";
@@ -17,6 +17,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
     protected View view;
     protected Activity mActivity;
     protected Context mContext;
+    protected SQLiteDatabase database;
 
 
     @Override
@@ -30,6 +31,7 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
         super.onCreate(savedInstanceState);
         mFragment = this;
         TAG = mFragment.getClass().getSimpleName();
+        database = TelinkMeshApplication.getInstance().database;
     }
 
     @Override

@@ -32,7 +32,6 @@ public class ConnectActivity extends BaseBackActivity implements EventListener<S
         supportFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.fl_container, new AddDeviceFragment());
-        ivRight.setVisibility(View.INVISIBLE);
         fragmentTransaction.commit();
     }
 
@@ -44,10 +43,8 @@ public class ConnectActivity extends BaseBackActivity implements EventListener<S
                 FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
                 if (checkedId == R.id.rbtn_connected) {
                     fragmentTransaction.replace(R.id.fl_container, new AddDeviceFragment());
-                    ivRight.setVisibility(View.INVISIBLE);
                 } else {
                     fragmentTransaction.replace(R.id.fl_container, new UnAddDeviceFragment());
-                    ivRight.setVisibility(View.VISIBLE);
                 }
                 fragmentTransaction.commit();
             }

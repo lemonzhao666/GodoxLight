@@ -21,6 +21,7 @@
  *******************************************************************************************************/
 package com.zlm.base;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -63,6 +64,7 @@ public class TelinkMeshApplication extends MeshApplication {
     private MeshInfo meshInfo;
 
     private Handler mOfflineCheckHandler;
+    public SQLiteDatabase database;
 
     @Override
     public void onCreate() {
@@ -77,8 +79,8 @@ public class TelinkMeshApplication extends MeshApplication {
         MeshLogger.enableRecord(SharedPreferenceHelper.isLogEnable(this));
         MeshLogger.d(meshInfo.toString());
         closePErrorDialog();
-
-
+        MySQLiteOpenHelper mySQLiteOpenHelper = new MySQLiteOpenHelper(mThis,"godoxmesh");
+        database = mySQLiteOpenHelper.getWritableDatabase();
 //        testEncipher();
     }
 

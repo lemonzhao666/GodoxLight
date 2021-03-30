@@ -55,9 +55,7 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
     private QMUITipDialog scanDialog;
 
     @Override
-    public void initData(Bundle bundle) {
-
-    }
+    public void initData(Bundle bundle) {}
 
     @Override
     public int bindLayout() {
@@ -87,16 +85,6 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
         TelinkMeshApplication.getInstance().addEventListener(ScanEvent.EVENT_TYPE_SCAN_TIMEOUT, this);
         TelinkMeshApplication.getInstance().addEventListener(ScanEvent.EVENT_TYPE_DEVICE_FOUND, this);
         mesh = TelinkMeshApplication.getInstance().getMeshInfo();
-//
-//        Flowable.interval(2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Long>() {
-//                    @Override
-//                    public void accept(@NonNull Long aLong) throws Exception {
-//                        Log.e("------>",(aLong++)+"");
-//                    }
-
-
-
         startScan();
     }
 
@@ -207,8 +195,7 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
         nodeInfo.macAddress = advertisingDevice.device.getAddress();
         nodeInfo.name = advertisingDevice.device.getName();
         advertisingDeviceMap.put(nodeInfo.macAddress, advertisingDevice);
-        if (!TelinkMeshApplication.getInstance().getMeshInfo().nodes.contains(nodeInfo))
-            nodeInfos.add(nodeInfo);
+        nodeInfos.add(nodeInfo);
         unAddDeviceAdapter.notifyDataSetChanged();
     }
 

@@ -6,13 +6,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.zlm.base.model.NodeInfo;
+
 import java.util.List;
 
-public class SpinnerAdapter extends BaseAdapter {
-    List<String> ListArr;
+public class ConnectedNodeAdapter extends BaseAdapter {
+    List<NodeInfo> ListArr;
     Context context;
 
-    public SpinnerAdapter(Context context, List<String> ListArr) {
+    public ConnectedNodeAdapter(Context context, List<NodeInfo> ListArr) {
         this.context = context;
         this.ListArr = ListArr;
     }
@@ -34,10 +36,9 @@ public class SpinnerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = View.inflate(context, R.layout.spinner_item, null);
-        TextView textView = view.findViewById(R.id.text);
-        textView.setTextColor(context.getResources().getColor(android.R.color.white));
-        textView.setText(ListArr.get(position));
+        View view = View.inflate(context, R.layout.simple_list_item, null);
+        TextView textView = view.findViewById(R.id.tv_name);
+        textView.setText(ListArr.get(position).getName());
         return view;
     }
 }

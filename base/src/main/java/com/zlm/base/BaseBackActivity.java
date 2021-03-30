@@ -6,7 +6,6 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -15,7 +14,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.Toolbar;
 
 public abstract class BaseBackActivity extends BaseActivity {
@@ -24,8 +22,6 @@ public abstract class BaseBackActivity extends BaseActivity {
     protected FrameLayout flActivityContainer;
     protected TextView tvTitle;
     protected TextView tvRight;
-    protected Button btnRight;
-    protected AppCompatCheckBox cbSelect;
     public ImageButton ivRight;
     protected RadioGroup radioGroup;
     protected RadioButton rbtnConnected;
