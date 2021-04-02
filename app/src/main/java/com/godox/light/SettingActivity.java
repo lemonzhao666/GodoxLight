@@ -46,6 +46,8 @@ public class SettingActivity extends BaseBackActivity {
     private int lang;
     private TextView tvCache;
     private TextView tvLogout;
+    private int currentDeviceMesh;
+    private FrameLayout flUpdate;
 
     @Override
     public int bindLayout() {
@@ -69,6 +71,7 @@ public class SettingActivity extends BaseBackActivity {
         tvCache = findViewById(R.id.tv_cache);
         flAbout = findViewById(R.id.fl_about);
         tvLogout = findViewById(R.id.tv_logout);
+        flUpdate = findViewById(R.id.fl_update);
         lens_items = new String[]{getString(R.string.nulll), getString(R.string.gridd), getString(R.string.duijiaoxian), getString(R.string.center)};
     }
 
@@ -106,6 +109,12 @@ public class SettingActivity extends BaseBackActivity {
                 startActivity(new Intent(mActivity, LoginActivity.class));
             }
         });
+        flUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mActivity, DeviceOtaActivity.class));
+            }
+        });
         flConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,11 +138,7 @@ public class SettingActivity extends BaseBackActivity {
                                 handler.sendEmptyMessage(0);
                             }
                         }.start();
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

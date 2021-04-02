@@ -22,7 +22,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SelectLangActivity"></activity>
+        <activity android:name=".DeviceOtaActivity"></activity>
+        <activity android:name=".SelectLangActivity" />
         <activity android:name=".AboutActivity" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".ConnectActivity" />
@@ -41,7 +42,7 @@
         </activity>
 
         <service
-            android:name=".DolwnLoadAppService"
+            android:name="com.zlm.base.DolwnLoadAppService"
             android:exported="false" />
     </application>
 

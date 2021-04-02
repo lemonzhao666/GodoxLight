@@ -53,6 +53,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -182,16 +183,16 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private LightControlLayout lightControlLayout;
     private Handler handler = new Handler();
     private FrameLayout rootLayout;
-    private List<NodeInfo> nodeList;
-    private int currentDeviceMesh;
+    private ArrayList<NodeInfo> nodeList;
+    private int currentDeviceMesh = -1;
+    private String currentDeviceName;
     private byte currentDM;
     private byte currentCCT;
     private float currentEV;
     private boolean isSent = true;
-    private boolean flash_open = true;
-    private boolean light_open = false;
+    private boolean flash_open;
+    private boolean light_open;
     private boolean isTakeComplete = true;
-    private boolean isFristLight = true;
     private TextView tvDevice;
     private QMUIPopup mNormalPopup;
     private ConnectedNodeAdapter adapter;
@@ -200,7 +201,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private TextView tvDIM;
     private TextView tvCCT;
     private boolean isPopupDismiss;
-    private String currentName;
 
     public static CameraFragment newInstance() {
         return new CameraFragment();
@@ -227,6 +227,11 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         updataNodeInfo();
         adapter.notifyDataSetChanged();
         MeshService.getInstance().autoConnect(new AutoConnectParameters());
+        flash_open = spUtils.getBoolean("flash_open", false);
+        light_open = spUtils.getBoolean("light_open", false);
+        currentDM = (byte) spUtils.getInt("currentDM", 50);
+        currentCCT = (byte) spUtils.getInt("currentCCT", 40);
+        currentEV = (byte) spUtils.getFloat("currentEV", 0f);
         if (flash_open) {
             ibtnFlash.setSelected(true);
         } else {
@@ -237,8 +242,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         } else {
             ibtnLight.setSelected(false);
         }
-        if (nodeList.size() > 0 && isFristLight) {
-            LogUtils.dTag(TAG, "light_open = " + light_open);
+        if (nodeList.size() > 0) {
             if (light_open) {
                 ibtnLight.setSelected(true);
             } else {
@@ -257,13 +261,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 LightControl.sendFlashStatusMessage(1, currentDeviceMesh);
             }
         }
-        isFristLight = false;
-        if (currentName!=null) {
-            currentCCT = (byte) spUtils.getInt(currentName + "_cct", 30);
-            currentDM = (byte) spUtils.getInt(currentName + "_dm", 50);
-            currentEV = spUtils.getFloat(currentName + "_ev", 0f);
-        }
-
     }
 
     private void loadImage() {
@@ -476,6 +473,12 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        updataNodeInfo();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void doBusiness() {
         if (RomUtils.isHuawei()) {
             rbAwb2.setVisibility(View.GONE);
@@ -554,7 +557,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         for (NodeInfo nodeInfo : nodes) {
             if (nodeInfo.getOnOff() == 1) {
                 String meshAdress = "0x" + Integer.toHexString(nodeInfo.meshAddress);
-                if (meshAdress.length() == 1) {
+                if (meshAdress.length() == 3) {
                     meshAdress = "0x0" + Integer.toHexString(nodeInfo.meshAddress);
                 }
                 int len = nodeInfo.macAddress.length();
@@ -565,9 +568,22 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 nodeList.add(node);
             }
         }
+
+
         if (nodeList.size() > 0) {
-            currentDeviceMesh = Integer.parseInt(nodeList.get(0).meshAddressHex.substring(2, 4), 16);
-            currentName = nodeList.get(0).name;
+            for (int i = 0; i < nodeList.size(); i++) {
+                NodeInfo nodeInfo = nodeList.get(i);
+                if (nodeInfo.getName() != currentDeviceName ||currentDeviceName ==null) {
+                    currentDeviceMesh = Integer.parseInt(nodeList.get(0).meshAddressHex.substring(2, 4), 16);
+                    currentDeviceName = nodeList.get(0).getName();
+                }
+            }
+            MeshNodeList.getInstance().setMeshNodeList(nodeList);
+            MeshNodeList.getInstance().setCurrentDeviceMesh(currentDeviceMesh);
+            tvDevice.setText(currentDeviceName);
+        } else {
+            tvDevice.setText("无设备");
+            MeshNodeList.getInstance().setCurrentDeviceMesh(-1);
         }
     }
 
@@ -577,22 +593,13 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int selectMesh = Integer.parseInt(nodeList.get(i).meshAddressHex.substring(2, 4), 16);
-                if (currentDeviceMesh != selectMesh) {
-                    currentDeviceMesh = selectMesh;
-                    currentName = nodeList.get(i).getName();
-                    currentCCT = (byte) spUtils.getInt(currentName + "_" + "cct", 30);
-                    currentDM = (byte) spUtils.getInt(currentName + "_" + "dm", 50);
-                    currentEV = spUtils.getFloat(currentName + "_" + "ev", 0f);
-                    LightControl.sendLightMeshMessage(currentDM, currentCCT, currentDeviceMesh);
-//                    LightControl.sendLightStatusMessage(1,currentDeviceMesh);
-                    mainHandler.postDelayed(sentRunnable,100);
-//                    mainHandler.postDelayed(sentFlashRunnable, 200);
-                }
+                currentDeviceMesh = selectMesh;
+                currentDeviceName = nodeList.get(i).getName();
                 tvDevice.setText(nodeList.get(i).getName());
                 if (mNormalPopup != null) {
                     mNormalPopup.dismiss();
                 }
-                tvCCT.setText("CCT: " + currentCCT * 100 + "k");
+                tvCCT.setText("CCT: " + (currentCCT * 100) + "k");
                 tvDIM.setText(currentDM + "%");
                 tvEV.setText(currentEV + "");
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ConvertUtils.dp2px(180)
@@ -662,7 +669,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             public void dmChange(int value) {
                 //f0,0a,40,00,ff,ff,ff,04
                 currentDM = (byte) value;
-                spUtils.put(currentName + "_dm", (int) currentDM);
+                spUtils.put("currentDM", (int) currentDM);
                 if (isSent) {
                     handler.postDelayed(sentRunnable, 300);
                     isSent = false;
@@ -673,7 +680,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void cctChange(int value) {
                 currentCCT = (byte) (value / 100);
-                spUtils.put(currentName + "_cct", (int) currentCCT);
+                spUtils.put("currentCCT", (int) currentCCT);
                 if (isSent) {
                     handler.postDelayed(sentRunnable, 300);
                     isSent = false;
@@ -688,13 +695,14 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 llControl.setVisibility(View.VISIBLE);
                 LightControl.sendLightStatusMessage(1, currentDeviceMesh);
                 light_open = false;
+                spUtils.put("light_open", false);
             }
         });
         flashControlLayout.setOnCCTChangeListener(new FlashControlLayout.OnCCTChangeListener() {
             @Override
             public void cctChange(int value) {
                 currentCCT = (byte) (value / 100);
-                spUtils.put(currentName + "_cct", (int) currentCCT);
+                spUtils.put("currentCCT", (int) currentCCT);
                 if (isSent) {
                     handler.postDelayed(sentFlashRunnable, 300);
                     isSent = false;
@@ -705,15 +713,16 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void evChange(float value) {
                 currentEV = value;
-                spUtils.put(currentName + "_ev", currentEV);
-                LightControl.sendFlashEvMeshMessage( getEvsend(currentEV), currentCCT, currentDeviceMesh);
+                spUtils.put("currentEV", currentEV);
+                LightControl.sendFlashEvMeshMessage(getEvsend(currentEV), currentCCT, currentDeviceMesh);
             }
         });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mActivity, ConnectActivity.class));
+                Intent intent = new Intent(mActivity, ConnectActivity.class);
+                startActivityForResult(intent, 1);
             }
         });
         ibtnFlash.setOnClickListener(new View.OnClickListener() {
@@ -729,6 +738,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 } else { //打开
                     v.setSelected(true);
                     flash_open = true;
+                    spUtils.put("flash_open", true);
                 }
             }
         });
@@ -746,6 +756,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     v.setSelected(true);
                     LightControl.sendLightStatusMessage(0, currentDeviceMesh);
                     light_open = true;
+                    spUtils.put("light_open", true);
                 }
             }
         });
@@ -758,6 +769,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 ibtnFlash.setSelected(false);
                 llControl.setVisibility(View.VISIBLE);
                 flash_open = false;
+                spUtils.put("flash_open", false);
             }
         });
 
@@ -1662,7 +1674,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             flControl.removeView(lightInfoView);
         }
     };
-    private byte getEvsend(float ev){
+
+    private byte getEvsend(float ev) {
         byte evSend = 0;
         if (ev == 2) {
             evSend = 100;

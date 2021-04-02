@@ -3,7 +3,7 @@ package com.godox.light;
 import java.util.ArrayList;
 
 public class CameraParamList {
-    private static ArrayList<CameraParam> cameraParamList = new ArrayList<CameraParam>();
+    private  ArrayList<CameraParam> cameraParamList = new ArrayList<CameraParam>();
 
     public  static CameraParamList getInstance() {
         return CameraParamListHolder.cameraParamList;

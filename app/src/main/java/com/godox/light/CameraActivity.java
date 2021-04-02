@@ -34,6 +34,7 @@ import com.telink.ble.mesh.foundation.EventListener;
 import com.telink.ble.mesh.foundation.MeshConfiguration;
 import com.telink.ble.mesh.foundation.MeshService;
 import com.zlm.base.BaseActivity;
+import com.zlm.base.DolwnLoadAppService;
 import com.zlm.base.PublicUtil;
 import com.zlm.base.TelinkMeshApplication;
 import com.zlm.base.model.MeshInfo;

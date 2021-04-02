@@ -7,20 +7,14 @@ import com.zlm.base.PublicUtil;
 
 public class LightControl {
     private static final String TAG = "LightControl";
+
     static void sendFlashEvMeshMessage(byte currentEVSend, byte currentCCT, int currentDeviceMesh) {
         byte[] bArr = new byte[8];
         byte[] bArr2 = {(byte) 0xFA, currentEVSend, currentCCT, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
-//        LogUtils.dTag(TAG, "send = " + PublicUtil.toHexString(bArr) + " currentDM = " + currentDM + " currentCCT = " + currentCCT);
-        MeshMessage meshMessage = new MeshMessage();
-        meshMessage.setDestinationAddress(currentDeviceMesh);
-        meshMessage.setOpcode(135664);
-        meshMessage.setParams(bArr);
-        meshMessage.setResponseMax(0);
-        meshMessage.setRetryCnt(0);
-        meshMessage.setTtl(10);
-        meshMessage.setTidPosition(11);
+        LogUtils.dTag(TAG, "currentDeviceMesh = " + currentDeviceMesh + "  sendFlashEvMeshMessage = " + PublicUtil.toHexString(bArr));
+        MeshMessage meshMessage = createMessage(currentDeviceMesh, bArr);
         MeshService.getInstance().sendMeshMessage(meshMessage);
     }
 
@@ -29,15 +23,8 @@ public class LightControl {
         byte[] bArr2 = {(byte) 0xF0, currentDM, currentCCT, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
-        LogUtils.dTag(TAG, "send = " + PublicUtil.toHexString(bArr) + " currentDM = " + currentDM + " currentCCT = " + currentCCT);
-        MeshMessage meshMessage = new MeshMessage();
-        meshMessage.setDestinationAddress(currentDeviceMesh);
-        meshMessage.setOpcode(135664);
-        meshMessage.setParams(bArr);
-        meshMessage.setResponseMax(0);
-        meshMessage.setRetryCnt(0);
-        meshMessage.setTtl(10);
-        meshMessage.setTidPosition(11);
+        LogUtils.dTag(TAG, "currentDeviceMesh = " + currentDeviceMesh + "  sendLightMeshMessage = " + PublicUtil.toHexString(bArr));
+        MeshMessage meshMessage = createMessage(currentDeviceMesh, bArr);
         MeshService.getInstance().sendMeshMessage(meshMessage);
     }
 
@@ -52,14 +39,8 @@ public class LightControl {
         }
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
-        MeshMessage meshMessage = new MeshMessage();
-        meshMessage.setDestinationAddress(currentDeviceMesh);
-        meshMessage.setOpcode(135664);
-        meshMessage.setParams(bArr);
-        meshMessage.setResponseMax(0);
-        meshMessage.setRetryCnt(0);
-        meshMessage.setTtl(10);
-        meshMessage.setTidPosition(11);
+        LogUtils.dTag(TAG, "currentDeviceMesh = " + currentDeviceMesh + "  sendFlashMessage = " + PublicUtil.toHexString(bArr));
+        MeshMessage meshMessage = createMessage(currentDeviceMesh, bArr);
         MeshService.getInstance().sendMeshMessage(meshMessage);
     }
 
@@ -73,15 +54,8 @@ public class LightControl {
         }
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
-        MeshMessage meshMessage = new MeshMessage();
-        meshMessage.setDestinationAddress(currentDeviceMesh);
-        meshMessage.setOpcode(135664);
-        meshMessage.setParams(bArr);
-
-        meshMessage.setResponseMax(0);
-        meshMessage.setRetryCnt(0);
-        meshMessage.setTtl(10);
-        meshMessage.setTidPosition(11);
+        LogUtils.dTag(TAG, "currentDeviceMesh = " + currentDeviceMesh + "  sendLightStatusMessage = " + PublicUtil.toHexString(bArr));
+        MeshMessage meshMessage = createMessage(currentDeviceMesh, bArr);
         MeshService.getInstance().sendMeshMessage(meshMessage);
     }
 
@@ -95,14 +69,38 @@ public class LightControl {
         }
         System.arraycopy(bArr2, 0, bArr, 0, 7);
         bArr[7] = (byte) PublicUtil.getCheckCode(bArr2);
+        LogUtils.dTag(TAG, "currentDeviceMesh = " + currentDeviceMesh + "  sendFlashStatusMessage = " + PublicUtil.toHexString(bArr));
+        MeshMessage meshMessage = createMessage(currentDeviceMesh, bArr);
+        MeshService.getInstance().sendMeshMessage(meshMessage);
+    }
+
+    static void sendSearchDeviceVersionMessage(int deviceMesh) {
+        byte[] sendData = new byte[8];
+        byte[] checkData = new byte[7];
+        checkData[0] = (byte) 0xFD;
+        checkData[1] = (byte) 0x02;
+        checkData[2] = (byte) 0xFF;
+        checkData[3] = (byte) 0xFF;
+        checkData[4] = (byte) 0xFF;
+        checkData[5] = (byte) 0xFF;
+        checkData[6] = (byte) 0xFF;
+        System.arraycopy(checkData, 0, sendData, 0, checkData.length);
+        byte checksum = (byte) PublicUtil.getCheckCode(checkData);
+        sendData[7] = checksum;
+        LogUtils.dTag(TAG, "deviceMesh = " + deviceMesh + "  sendSearchDeviceVersionMessage = " + PublicUtil.toHexString(sendData));
+        MeshMessage meshMessage = createMessage(deviceMesh, sendData);
+        MeshService.getInstance().sendMeshMessage(meshMessage);
+    }
+
+    private static MeshMessage createMessage(int address, byte[] params) {
         MeshMessage meshMessage = new MeshMessage();
-        meshMessage.setDestinationAddress(currentDeviceMesh);
-        meshMessage.setOpcode(135664);
-        meshMessage.setParams(bArr);
+        meshMessage.setDestinationAddress(address);
+        meshMessage.setOpcode(0x0211F0);
+        meshMessage.setParams(params);
         meshMessage.setResponseMax(0);
         meshMessage.setRetryCnt(0);
         meshMessage.setTtl(10);
         meshMessage.setTidPosition(11);
-        MeshService.getInstance().sendMeshMessage(meshMessage);
+        return meshMessage;
     }
 }
