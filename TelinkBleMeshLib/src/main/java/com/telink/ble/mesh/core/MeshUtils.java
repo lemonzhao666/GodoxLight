@@ -22,6 +22,7 @@
 package com.telink.ble.mesh.core;
 
 import android.os.ParcelUuid;
+import android.util.Log;
 
 import com.telink.ble.mesh.core.ble.MeshScanRecord;
 import com.telink.ble.mesh.core.ble.UUIDInfo;
@@ -34,6 +35,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+
+import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
 public final class MeshUtils {
 
@@ -242,8 +245,26 @@ public final class MeshUtils {
      */
     public static byte[] getMeshServiceData(byte[] scanRecord, boolean unprovisioned) {
         MeshScanRecord meshScanRecord = MeshScanRecord.parseFromBytes(scanRecord);
-        return meshScanRecord.getServiceData(ParcelUuid.fromString((unprovisioned ? UUIDInfo.SERVICE_PROVISION : UUIDInfo.SERVICE_PROXY).toString()));
+        return meshScanRecord.getServiceData(ParcelUuid.fromString((unprovisioned ? UUIDInfo.PROVISION_SERVICE_UUID : UUIDInfo.PROXY_SERVICE_UUID).toString()));
     }
+
+    public static String getDeviceModelType(byte[] scanRecord){
+        byte[] dataArray = new byte[2];
+        System.arraycopy(scanRecord, 45, dataArray, 0, dataArray.length);
+        Log.i("MeshUtils",dataArray[1]+dataArray[0]+"");
+        StringBuilder hexString =new StringBuilder();
+        if ((dataArray[1] & 0xff) < 0x10) {//0~F前面不零
+            hexString.append("0");
+            hexString.append(Integer.toHexString(0xFF & dataArray[1]));
+        }
+        if ((dataArray[0] & 0xff) < 0x10) {//0~F前面不零
+            hexString.append("0");
+            hexString.append(Integer.toHexString(0xFF & dataArray[0]));
+        }
+        return hexString.toString();
+
+    }
+
 
     /**
      * get missing bit position

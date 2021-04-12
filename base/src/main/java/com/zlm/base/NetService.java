@@ -29,5 +29,5 @@ public interface NetService {
 
     @Streaming
     @GET
-    Flowable<ResponseBody> downloadDevcieBin(@Url String url);
+    Call<ResponseBody> downloadDevcieBin(@Url String url);
 }

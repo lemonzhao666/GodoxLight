@@ -22,6 +22,7 @@
 package com.telink.ble.mesh.core.message;
 
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.telink.ble.mesh.core.networking.AccessLayerPDU;
 
@@ -52,7 +53,7 @@ public abstract class StatusMessage implements Parcelable {
      * {@link MeshStatus.Container}
      */
     public static StatusMessage createByAccessMessage(int opcode, byte[] params) {
-
+        Log.d("createByAccessMessage","opcode = "+opcode);
         Class messageClass = MeshStatus.Container.getMessageClass(opcode);
         if (messageClass != null) {
             Object msgClass = null;

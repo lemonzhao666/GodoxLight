@@ -41,6 +41,7 @@ import com.telink.ble.mesh.core.message.firmwareupdate.blobtransfer.BlobInfoStat
 import com.telink.ble.mesh.core.message.firmwareupdate.blobtransfer.BlobTransferStatusMessage;
 import com.telink.ble.mesh.core.message.generic.LevelStatusMessage;
 import com.telink.ble.mesh.core.message.generic.OnOffStatusMessage;
+import com.telink.ble.mesh.core.message.generic.VendorMessage;
 import com.telink.ble.mesh.core.message.lighting.CtlStatusMessage;
 import com.telink.ble.mesh.core.message.lighting.CtlTemperatureStatusMessage;
 import com.telink.ble.mesh.core.message.lighting.HslStatusMessage;
@@ -113,7 +114,6 @@ public class MeshStatus {
             // generic
             register(Opcode.G_ONOFF_STATUS.value, OnOffStatusMessage.class);
             register(Opcode.G_LEVEL_STATUS.value, LevelStatusMessage.class);
-
             // lighting
             register(Opcode.LIGHTNESS_STATUS.value, LightnessStatusMessage.class);
             register(Opcode.LIGHT_CTL_TEMP_STATUS.value, CtlTemperatureStatusMessage.class);
@@ -159,7 +159,6 @@ public class MeshStatus {
             register(Opcode.REMOTE_PROV_PDU_REPORT.value, ProvisioningPDUReportMessage.class);
             register(Opcode.REMOTE_PROV_PDU_OUTBOUND_REPORT.value, ProvisioningPDUOutboundReportMessage.class);
 //            register(Opcode.REMOTE_PROV_SCAN_CAPA_STS.value, ObjectTransferStatusMessage.class);
-
             // fast provision [vendor]
             register(Opcode.VD_MESH_ADDR_GET_STS.value, MeshAddressStatusMessage.class);
         }

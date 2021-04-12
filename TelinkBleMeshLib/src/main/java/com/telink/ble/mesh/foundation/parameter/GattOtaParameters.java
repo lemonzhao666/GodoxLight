@@ -21,8 +21,6 @@
  *******************************************************************************************************/
 package com.telink.ble.mesh.foundation.parameter;
 
-import com.telink.ble.mesh.entity.ConnectionFilter;
-
 /**
  * Created by kee on 2017/11/23.
  */
@@ -30,10 +28,14 @@ import com.telink.ble.mesh.entity.ConnectionFilter;
 public class GattOtaParameters extends Parameters {
 
 
-    public GattOtaParameters(ConnectionFilter filter, byte[] firmware) {
+    public GattOtaParameters(int targetMeshAddress, byte[] firmware) {
         this.set(COMMON_PROXY_FILTER_INIT_NEEDED, true);
-        this.set(ACTION_CONNECTION_FILTER, filter);
+        this.setTarget(targetMeshAddress);
         this.setFirmware(firmware);
+    }
+
+    public void setTarget(int meshAddress) {
+        this.set(ACTION_OTA_MESH_ADDRESS, meshAddress);
     }
 
     public void setFirmware(byte[] firmware) {

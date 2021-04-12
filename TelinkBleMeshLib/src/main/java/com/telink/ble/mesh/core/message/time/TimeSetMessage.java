@@ -72,11 +72,6 @@ public class TimeSetMessage extends GenericMessage {
      */
     private int zoneOffset;
 
-    /**
-     * no-ack for time-status message
-     */
-    private boolean ack = false;
-
     public static TimeSetMessage getSimple(int address, int appKeyIndex, long taiSeconds, int zoneOffset, int rspMax) {
         TimeSetMessage message = new TimeSetMessage(address, appKeyIndex);
         message.taiSeconds = taiSeconds;
@@ -91,12 +86,12 @@ public class TimeSetMessage extends GenericMessage {
 
     @Override
     public int getResponseOpcode() {
-        return ack ? Opcode.TIME_STATUS.value : OPCODE_INVALID;
+        return Opcode.TIME_STATUS.value;
     }
 
     @Override
     public int getOpcode() {
-        return ack ? Opcode.TIME_SET.value : Opcode.TIME_STATUS.value;
+        return Opcode.TIME_SET.value;
     }
 
     @Override
@@ -136,9 +131,5 @@ public class TimeSetMessage extends GenericMessage {
 
     public void setZoneOffset(int zoneOffset) {
         this.zoneOffset = zoneOffset;
-    }
-
-    public void setAck(boolean ack) {
-        this.ack = ack;
     }
 }

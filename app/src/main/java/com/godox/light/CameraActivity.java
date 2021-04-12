@@ -280,7 +280,7 @@ public class CameraActivity extends BaseActivity implements EventListener<String
         MeshService.getInstance().init(this, TelinkMeshApplication.getInstance());
         MeshConfiguration meshConfiguration = TelinkMeshApplication.getInstance().getMeshInfo().convertToConfiguration();
         MeshService.getInstance().setupMeshNetwork(meshConfiguration);
-        MeshService.getInstance().checkBluetoothState();
+//        MeshService.getInstance().checkBluetoothState();
     }
 
     private void resetNodeState() {

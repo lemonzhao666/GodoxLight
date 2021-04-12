@@ -165,5 +165,4 @@ public class AddDeviceFragment extends BaseFragment implements EventListener<Str
             }
         }
     }
-
 }

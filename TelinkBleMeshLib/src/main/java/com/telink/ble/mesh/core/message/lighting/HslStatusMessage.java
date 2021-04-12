@@ -100,7 +100,7 @@ public class HslStatusMessage extends StatusMessage implements Parcelable {
         index += 2;
         if (params.length == DATA_LEN_COMPLETE) {
             this.isComplete = true;
-            this.remainingTime = params[index];
+            remainingTime = params[index];
         }
     }
 

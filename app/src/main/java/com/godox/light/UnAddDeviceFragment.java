@@ -55,7 +55,8 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
     private QMUITipDialog scanDialog;
 
     @Override
-    public void initData(Bundle bundle) {}
+    public void initData(Bundle bundle) {
+    }
 
     @Override
     public int bindLayout() {
@@ -71,7 +72,7 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
         recycleview.setItemAnimator(new DefaultItemAnimator());
         nodeInfos = new ArrayList<>();
         unAddDeviceAdapter = new UnAddDeviceAdapter(R.layout.recycleview_item_device2, nodeInfos);
-        recycleview.addItemDecoration(new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL));
+        recycleview.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         recycleview.setAdapter(unAddDeviceAdapter);
         ibtnRight.setVisibility(View.VISIBLE);
     }
@@ -99,6 +100,10 @@ public class UnAddDeviceFragment extends BaseFragment implements EventListener<S
         unAddDeviceAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (TelinkMeshApplication.getInstance().getMeshInfo().nodes.size() == 3) {
+                    ToastUtils.showShort("最多连接3个设备!");
+                    return;
+                }
                 currentNodeInfo = nodeInfos.get(position);
                 tipDialog = new QMUITipDialog.Builder(mActivity)
                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)

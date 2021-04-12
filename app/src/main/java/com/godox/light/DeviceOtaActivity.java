@@ -1,26 +1,55 @@
 package com.godox.light;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.View;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.godox.light.view.TextProgressBar;
+import com.telink.ble.mesh.core.message.MeshStatus;
 import com.telink.ble.mesh.core.message.generic.VendorMessage;
 import com.telink.ble.mesh.foundation.Event;
 import com.telink.ble.mesh.foundation.EventListener;
 import com.telink.ble.mesh.foundation.MeshService;
 import com.telink.ble.mesh.foundation.event.GattOtaEvent;
 import com.telink.ble.mesh.foundation.event.StatusNotificationEvent;
+import com.telink.ble.mesh.foundation.parameter.GattOtaParameters;
 import com.zlm.base.BaseActivity;
+import com.zlm.base.BaseBackActivity;
+import com.zlm.base.DownloadListener;
 import com.zlm.base.PublicUtil;
 import com.zlm.base.TelinkMeshApplication;
 import com.zlm.base.model.UpdateInfo;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class DeviceOtaActivity extends BaseActivity implements EventListener<String> {
+public class DeviceOtaActivity extends BaseBackActivity implements EventListener<String>, DownloadListener {
+
+    private String btFirmwareUrl;
+    private TextProgressBar textProgressBar;
+    private byte[] mFirmware;
+    private int newVersion;
+    private int currentVersion;
+    private TextView tvVersionInfo;
+    private TextView newVersionInfo;
 
     @Override
     public int bindLayout() {
@@ -30,6 +59,12 @@ public class DeviceOtaActivity extends BaseActivity implements EventListener<Str
     @Override
     public void initView(Bundle savedInstanceState, View view) {
         setTitle("固件升级");
+        textProgressBar = findViewById(R.id.btn_start_ota);
+        tvVersionInfo = findViewById(R.id.tv_version_info);
+        newVersionInfo = findViewById(R.id.tv_new_version_info);
+        TelinkMeshApplication.getInstance().addEventListener(GattOtaEvent.EVENT_TYPE_OTA_SUCCESS, this);
+        TelinkMeshApplication.getInstance().addEventListener(GattOtaEvent.EVENT_TYPE_OTA_PROGRESS, this);
+        TelinkMeshApplication.getInstance().addEventListener(GattOtaEvent.EVENT_TYPE_OTA_FAIL, this);
         TelinkMeshApplication.getInstance().addEventListener(VendorMessage.class.getName(), this);
     }
 
@@ -43,8 +78,9 @@ public class DeviceOtaActivity extends BaseActivity implements EventListener<Str
                     @Override
                     public void accept(UpdateInfo updateInfo) throws Exception {
                         String btFirmwareVersion = updateInfo.getBtFirmwareVersion();
-                        LogUtils.dTag(TAG, "btFirmwareVersion = " + btFirmwareVersion);
-                        String btFirmwareUrl = updateInfo.getBtFirmwareUrl();
+                        newVersion = Integer.parseInt(btFirmwareVersion);
+                        LogUtils.dTag(TAG, "newVersion = " + btFirmwareVersion);
+                        btFirmwareUrl = updateInfo.getBtFirmwareUrl();
                     }
                 });
         new Handler().postDelayed(new Runnable() {
@@ -52,44 +88,191 @@ public class DeviceOtaActivity extends BaseActivity implements EventListener<Str
             public void run() {
                 LightControl.sendSearchDeviceVersionMessage(MeshNodeList.getInstance().getCurrentDeviceMesh());
             }
-        },1000);
-
-    }
-
-    @Override
-    public void initListener() {
+        }, 1000);
 
     }
 
     @Override
     public void performed(Event<String> event) {
-        super.performed(event);
+        if (event.getType().equals(VendorMessage.class.getName())) {
+            VendorMessage vendorMessage = (VendorMessage) ((StatusNotificationEvent) event).getNotificationMessage().getStatusMessage();
+            byte[] dataArray = vendorMessage.getDataParam();
+            currentVersion = dataArray[4];
+            tvVersionInfo.setText("设备固件版本："+currentVersion);
+            if (currentVersion < newVersion) {
+                textProgressBar.setVisibility(View.VISIBLE);
+                textProgressBar.setTextValue("开始升级");
+                newVersionInfo.setVisibility(View.VISIBLE);
+                newVersionInfo.setText("有新版本可以升级,新版本："+newVersion);
+            }
+            LogUtils.dTag(TAG, "currentVersion  = " + PublicUtil.toHexString(dataArray));
+        }
         switch (event.getType()) {
             case GattOtaEvent.EVENT_TYPE_OTA_SUCCESS:
+                setTextProgressBar("升级完成",false);
                 MeshService.getInstance().idle(false);
                 break;
             case GattOtaEvent.EVENT_TYPE_OTA_FAIL:
+                setTextProgressBar("升级失败",true);
                 MeshService.getInstance().idle(true);
                 break;
             case GattOtaEvent.EVENT_TYPE_OTA_PROGRESS:
                 int progress = ((GattOtaEvent) event).getProgress();
+                setTextProgressBar("升级进度：" + progress + "%" ,false);
+                textProgressBar.setProgress(progress);
                 break;
         }
+    }
 
-        if (event.getType().equals(VendorMessage.class.getName())) {
-//            NotificationMessage notificationMessage = ((StatusNotificationEvent) event).getNotificationMessage();
-            VendorMessage vendorMessage = (VendorMessage) ((StatusNotificationEvent) event).getNotificationMessage().getStatusMessage();
-            byte[] dataArray = vendorMessage.getDataParam();
-            LogUtils.dTag(TAG, PublicUtil.toHexString(dataArray));
-//            String version = Integer.toHexString(dataArray[2])+""+Integer.toHexString(dataArray[3])+""+Integer.toHexString(dataArray[4]);
-//            try {
-//                mVersion = Integer.parseInt(version);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//                mVersion = 20;
-//            }
-//            tv_version_info.setText(getString(R.string.version, mVersion+""));
-//            mDeviceOtapresenter.initDeviceFeature();
+    @Override
+    public void initListener() {
+        textProgressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                netService.downloadDevcieBin(btFirmwareUrl).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        String path = Environment.getExternalStorageDirectory() + "/GodoxLight/LK8620_mesh_GD.bin";
+                        Thread mThread = new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                writeResponseToDisk(path, response, DeviceOtaActivity.this);
+                            }
+                        };
+                        mThread.start();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        setTextProgressBar("下载失败" ,true);
+                    }
+                });
+            }
+        });
+    }
+
+
+    private static void writeResponseToDisk(String path, Response<ResponseBody> response, DownloadListener downloadListener) {
+        //从response获取输入流以及总大小
+        writeFileFromIS(new File(path), response.body().byteStream(), response.body().contentLength(), downloadListener);
+    }
+
+    private static int sBufferSize = 8192;
+
+    private static void writeFileFromIS(File file, InputStream is, long totalLength, DownloadListener downloadListener) {
+        downloadListener.onStartDownLoad();
+        if (!file.exists()) {
+            if (!file.getParentFile().exists())
+                file.getParentFile().mkdir();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                downloadListener.onFail("createNewFile IOException");
+            }
         }
+        OutputStream os = null;
+        long currentLength = 0;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(file));
+            byte data[] = new byte[sBufferSize];
+            int len;
+            while ((len = is.read(data, 0, sBufferSize)) != -1) {
+                os.write(data, 0, len);
+                currentLength += len;
+                downloadListener.onProgress((int) (100 * currentLength / totalLength));
+            }
+            downloadListener.onFinish(file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            downloadListener.onFail("IOException");
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    @Override
+    public void onStartDownLoad() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setTextProgressBar("开始下载" ,false);
+            }
+        });
+
+    }
+
+    @Override
+    public void onProgress(int progress) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setTextProgressBar("下载中：" + progress + "%",false);
+                textProgressBar.setProgress(progress);
+            }
+        });
+
+    }
+
+    @Override
+    public void onFinish(String path) {
+        try {
+            InputStream stream = new FileInputStream(new File(path));
+            int length = stream.available();
+            mFirmware = new byte[length];
+            stream.read(mFirmware);
+            stream.close();
+            if (mFirmware == null) {
+                toastMsg("select firmware!");
+                return;
+            }
+            GattOtaParameters parameters = new GattOtaParameters(MeshNodeList.getInstance().getCurrentDeviceMesh(), mFirmware);
+            MeshService.getInstance().startGattOta(parameters);
+        } catch (Exception e) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setTextProgressBar("升级文件错误",true);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onFail(String errorInfo) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setTextProgressBar("下载失败",true);
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TelinkMeshApplication.getInstance().removeEventListener(this);
+    }
+
+    private void setTextProgressBar(String text, boolean isProgress) {
+        textProgressBar.setTextValue(text);
+        textProgressBar.setEnabled(isProgress);
+    }
+
+    static {
+        MeshStatus.Container.register(0x0211F1, VendorMessage.class);
     }
 }

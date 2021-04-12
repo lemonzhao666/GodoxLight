@@ -23,6 +23,7 @@ package com.telink.ble.mesh.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.os.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,7 +59,7 @@ public abstract class FileSystem {
             success = true;
 
         } catch (IOException e) {
-
+                e.printStackTrace();
         } finally {
             try {
                 if (ops != null)
@@ -66,6 +67,7 @@ public abstract class FileSystem {
                 if (ops != null)
                     fos.close();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -103,9 +105,42 @@ public abstract class FileSystem {
         return result;
     }
 
+
+
+    public static Object readTestAsObject(Context context, String filePath) {
+
+//        File dir = context.getFilesDir();
+        File file = new File(filePath);
+
+        if (!file.exists())
+            return null;
+
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+
+        Object result = null;
+        try {
+
+            fis = new FileInputStream(file);
+            ois = new ObjectInputStream(fis);
+
+            result = ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            MeshLogger.w("read object error : " + e.toString());
+        } finally {
+            try {
+                if (ois != null)
+                    ois.close();
+            } catch (Exception e) {
+            }
+        }
+
+        return result;
+    }
+
     public static File getSettingPath() {
         File root = Environment.getExternalStorageDirectory();
-        return new File(root.getAbsolutePath() + File.separator + "TelinkBleMesh");
+        return new File(root.getAbsolutePath() + File.separator + "Godox-BleMesh");
     }
 
     //
@@ -156,4 +191,78 @@ public abstract class FileSystem {
 
         return "";
     }
+
+
+    /**
+     * 跟新替换文件
+     * @param filePath
+     * @param newFilePath
+     */
+    public static void copyFile(String filePath,String newFilePath){
+        File file = new File(newFilePath);
+        //复制到的位置
+        File toFile = new File(filePath);
+        try {
+            copy(file,toFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private static void copy(File file,File toFile) throws Exception {
+        byte[] b = new byte[1024];
+        int a;
+        FileInputStream fis;
+        FileOutputStream fos;
+        try {
+            if (file.isDirectory()) {
+                String filepath = file.getAbsolutePath();
+                filepath = filepath.replaceAll("\\\\", "/");
+                String toFilepath = toFile.getAbsolutePath();
+                toFilepath = toFilepath.replaceAll("\\\\", "/");
+                int lastIndexOf = filepath.lastIndexOf("/");
+                toFilepath = toFilepath + filepath.substring(lastIndexOf, filepath.length());
+                File copy = new File(toFilepath);
+                //复制文件夹
+                if (!copy.exists()) {
+                    copy.mkdir();
+                }
+                //遍历文件夹
+                for (File f : file.listFiles()) {
+                    copy(f, copy);
+                }
+            } else {
+                if (toFile.isDirectory()) {
+                    String filepath = file.getAbsolutePath();
+                    filepath = filepath.replaceAll("\\\\", "/");
+                    String toFilepath = toFile.getAbsolutePath();
+                    toFilepath = toFilepath.replaceAll("\\\\", "/");
+                    int lastIndexOf = filepath.lastIndexOf("/");
+                    toFilepath = toFilepath + filepath.substring(lastIndexOf, filepath.length());
+
+                    //写文件
+                    File newFile = new File(toFilepath);
+                    fis = new FileInputStream(file);
+                    fos = new FileOutputStream(newFile);
+                    while ((a = fis.read(b)) != -1) {
+                        fos.write(b,0, a);
+                    }
+                } else {
+                    //写文件
+                    fis = new FileInputStream(file);
+                    fos = new FileOutputStream(toFile);
+                    while ((a = fis.read(b)) != -1) {
+                        fos.write(b,0, a);
+                    }
+                }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

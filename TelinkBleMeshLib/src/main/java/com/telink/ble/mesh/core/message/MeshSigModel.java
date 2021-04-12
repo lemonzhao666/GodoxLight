@@ -21,6 +21,8 @@
  *******************************************************************************************************/
 package com.telink.ble.mesh.core.message;
 
+import org.spongycastle.math.ec.endo.GLVEndomorphism;
+
 import java.io.Serializable;
 
 /**
@@ -46,6 +48,7 @@ public enum MeshSigModel implements Serializable {
 
     SIG_MD_PRIVATE_BEACON_SERVER(0x000a, "", "", true),
     SIG_MD_PRIVATE_BEACON_CLIENT(0x000b, "", "", true),
+
 
 
     SIG_MD_G_ONOFF_S(0x1000, "Generic OnOff Server", "Generic"),
@@ -113,6 +116,9 @@ public enum MeshSigModel implements Serializable {
     SIG_MD_FW_DISTRIBUT_C(0xFE03, "firmware distribute client", "OTA"),
     SIG_MD_OBJ_TRANSFER_S(0xFF00, "object transfer server", "OTA"),
     SIG_MD_OBJ_TRANSFER_C(0xFF01, "object transfer client", "OTA"),
+    VENDOR_MD_LIGHT_S (0x0211, "vendor lights Server", "Lighting"),
+    VENDOR_MD_LIGHT_C (0x021101, "vendor lights Server", "Lighting"),
+    VENDOR_MD_LIGHT_S2 (0x021102, "vendor lights Server", "Lighting"),
     ;
 
     /**
@@ -152,7 +158,7 @@ public enum MeshSigModel implements Serializable {
 
     // default sub list
     public static MeshSigModel[] getDefaultSubList() {
-        return new MeshSigModel[]{SIG_MD_G_ONOFF_S, SIG_MD_LIGHTNESS_S, SIG_MD_LIGHT_CTL_S,
+        return new MeshSigModel[]{VENDOR_MD_LIGHT_S,SIG_MD_G_ONOFF_S,SIG_MD_LIGHTNESS_S, SIG_MD_LIGHT_CTL_S,
                 SIG_MD_LIGHT_CTL_TEMP_S, SIG_MD_LIGHT_HSL_S};
 
     }

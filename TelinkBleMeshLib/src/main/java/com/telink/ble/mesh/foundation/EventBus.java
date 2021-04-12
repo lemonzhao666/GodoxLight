@@ -1,14 +1,14 @@
 /********************************************************************************************************
- * @file     EventBus.java 
+ * @file EventBus.java
  *
- * @brief    for TLSR chips
+ * @brief for TLSR chips
  *
- * @author	 telink
- * @date     Sep. 30, 2010
+ * @author telink
+ * @date Sep. 30, 2010
  *
- * @par      Copyright (c) 2010, Telink Semiconductor (Shanghai) Co., Ltd.
+ * @par Copyright (c) 2010, Telink Semiconductor (Shanghai) Co., Ltd.
  *           All rights reserved.
- *           
+ *
  *			 The information contained herein is confidential and proprietary property of Telink 
  * 		     Semiconductor (Shanghai) Co., Ltd. and is available under the terms 
  *			 of Commercial License Agreement between Telink Semiconductor (Shanghai) 
@@ -17,13 +17,14 @@
  *
  * 			 Licensees are granted free, non-transferable use of the information in this 
  *			 file under Mutual Non-Disclosure Agreement. NO WARRENTY of ANY KIND is provided. 
- *           
+ *
  *******************************************************************************************************/
 
 package com.telink.ble.mesh.foundation;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 
 import com.telink.ble.mesh.util.MeshLogger;
@@ -127,7 +128,6 @@ public class EventBus<T> {
     }
 
     private void processOnThread() {
-
         final Event<T> event;
 
         synchronized (mEventQueue) {
@@ -152,7 +152,7 @@ public class EventBus<T> {
 
     private void processEvent() {
 //        MeshLogger.log("process on thread : " + Thread.currentThread().getName());
-
+        Log.d("processEvent", "有数据来了1");
         final Event<T> event;
 
         synchronized (mEventQueue) {
@@ -160,23 +160,25 @@ public class EventBus<T> {
             if (event == null)
                 return;
         }
-
-//        MeshLogger.log("process event : " + event.getType() + "--" + event.getClass().getName());
-
+        Log.d("processEvent", "有数据来了2");
+        MeshLogger.log("process event : " + event.getType() + "--" + event.getClass().getName());
+//        com.telink.ble.mesh.core.message.generic.VendorMessage--com.telink.ble.mesh.foundation.event.StatusNotificationEvent
+//        com.telink.ble.mesh.EVENT_TYPE_NOTIFICATION_MESSAGE_UNKNOWN
         T eventType = event.getType();
         List<EventListener<T>> listeners = null;
-
+        Log.d("processEvent", "有数据来了3");
         synchronized (this.mEventListeners) {
             if (this.mEventListeners.containsKey(eventType)) {
+                Log.d("processEvent", "有数据来了了");
                 listeners = this.mEventListeners.get(eventType);
             }
         }
-
+        Log.d("processEvent", "有数据来了4");
         if (listeners != null && !listeners.isEmpty()) {
             synchronized (this.mLock) {
                 this.processing = true;
             }
-
+            Log.d("processEvent", "有数据来了5");
             for (EventListener<T> listener : listeners) {
                 if (listener != null)
                     listener.performed(event);

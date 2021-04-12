@@ -341,7 +341,6 @@ public enum Opcode {
     FIRMWARE_UPDATE_APPLY(0x08B6),
     FIRMWARE_UPDATE_STATUS(0x09B6),
 
-
     // fast provision [vendor command]
     VD_MESH_RESET_NETWORK(0x0211C5),
     VD_MESH_ADDR_GET(0x0211C6),

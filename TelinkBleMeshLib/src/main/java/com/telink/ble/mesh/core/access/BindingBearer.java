@@ -35,7 +35,5 @@ public enum BindingBearer {
     /**
      * binding if mesh proxy is connected
      */
-    Any,
-
-    Flex
+    Any
 }

@@ -1,1 +1,1 @@
-include ':app',':phototable',":base","TelinkBleMeshLib"
+include ':app',':phototable',":base",":TelinkBleMeshLib"
