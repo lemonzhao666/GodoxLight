@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
@@ -112,6 +113,10 @@ public class SettingActivity extends BaseBackActivity {
         flUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(MeshDevice.getOnLineNodeList() ==null||MeshDevice.getOnLineNodeList().size()==0){
+                    ToastUtils.showShort(R.string.no_online_device);
+                    return;
+                }
                 startActivity(new Intent(mActivity, DeviceOtaActivity.class));
             }
         });

@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
+
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -141,9 +144,15 @@ public class DolwnLoadAppService extends Service {
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + appFile.toString()),
-                "application/vnd.android.package-archive");
-        getApplicationContext().startActivity(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".fileProvider", appFile);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.parse("file://" + appFile.toString()),
+                    "application/vnd.android.package-archive");
+        }
+        startActivity(intent);
         stopSelf();
     }
 

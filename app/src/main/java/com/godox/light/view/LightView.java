@@ -48,7 +48,7 @@ public class LightView extends View {
             } else {
                 top += 100;
             }
-            int[] colors = PublicUtil.temperatureToColor(i * 100 + 2800);
+            int[] colors = PublicUtil.temperatureToColor(6500 - i * 100 );
             mPaint = new Paint();
             mPaint.setColor(Color.rgb(colors[0], colors[1], colors[2]));
             canvas.drawCircle(w / 2, top, 25, mPaint);

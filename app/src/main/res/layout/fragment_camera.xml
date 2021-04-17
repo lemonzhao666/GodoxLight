@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#55000000">
+    android:background="@color/black">
 
     <FrameLayout
         android:id="@+id/fl_preview"
@@ -30,7 +31,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/fl_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -54,7 +55,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="40dp"
                 android:textSize="10sp"
-                android:text="选择设备查看参数"
+                android:text="@string/No_equipment"
                 android:textColor="@color/white"/>
 
             <ImageButton
@@ -69,13 +70,13 @@
             android:id="@+id/ll_ae"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="126dp"
+            android:layout_above="@id/fl_item"
+            android:background="@color/transparent_88"
             android:clickable="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:background="@color/transparent_88"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:layout_marginBottom="1dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -145,17 +146,18 @@
             android:id="@+id/ll_awb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="126dp"
+            android:layout_above="@id/fl_item"
+            android:background="@color/transparent_88"
             android:clickable="true"
             android:orientation="vertical"
-            android:background="@color/transparent_88"
+            android:layout_marginBottom="1dp"
             android:visibility="gone">
 
             <FrameLayout
                 android:id="@+id/fl_awb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
                 android:visibility="gone">
 
                 <com.godox.light.view.ColorSelectView
@@ -229,10 +231,10 @@
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fl_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="70dp"
+            android:layout_above="@id/fl_take"
             android:background="@color/transparent_99"
             android:clickable="true">
 
@@ -291,9 +293,11 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/fl_take"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
             android:clickable="true">
 
             <ImageButton
@@ -325,9 +329,11 @@
             android:id="@+id/ll_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="270dp"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/ll_ae"
             android:clickable="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="50dp"
             android:orientation="vertical">
 
             <ImageButton
@@ -351,20 +357,22 @@
             android:id="@+id/flashcontrollayout"
             android:layout_width="wrap_content"
             android:layout_height="380dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="270dp"
+            android:layout_alignParentRight="true"
+            android:layout_above="@id/ll_ae"
             android:clickable="true"
+            android:layout_marginBottom="50dp"
             android:visibility="gone" />
 
         <com.godox.light.view.LightControlLayout
             android:id="@+id/lightcontrollayout"
             android:layout_width="wrap_content"
+            android:layout_marginBottom="50dp"
             android:layout_height="380dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="270dp"
+            android:layout_above="@id/ll_ae"
+            android:layout_alignParentRight="true"
             android:clickable="true"
             android:visibility="gone" />
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </FrameLayout>

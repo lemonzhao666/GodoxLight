@@ -50,6 +50,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -142,7 +143,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private ImageButton ivSetting;
     private SelectView selectView1;
     private SelectView selectView2;
-
     private TextView tvIso1;
     private TextView tvIso2;
     private ImageButton ibtnTake;
@@ -162,7 +162,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private LinearLayout llAE;
     private CheckedTextView rbtnTrade;
     private CheckedTextView checkedTextMe;
-    private FrameLayout flControl;
+    private RelativeLayout flControl;
     private FrameLayout flPreview;
     private FocusView focusView;
     private int textureViewW;
@@ -231,15 +231,10 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         TelinkMeshApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
         TelinkMeshApplication.getInstance().addEventListener(NodeStatusChangedEvent.EVENT_TYPE_NODE_STATUS_CHANGED, this);
         TelinkMeshApplication.getInstance().addEventListener(AutoConnectEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
-        TelinkMeshApplication.getInstance().addEventListener(AutoConnectEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
         TelinkMeshApplication.getInstance().addEventListener(VendorMessage.class.getName(), this);
-//        updataNodeInfo();
-//        adapter.notifyDataSetChanged();
+        updataNodeInfo();
+        adapter.notifyDataSetChanged();
         MeshService.getInstance().autoConnect(new AutoConnectParameters());
-
-
-//        flash_open = spUtils.getBoolean("flash_open", false);
-//        light_open = spUtils.getBoolean("light_open", false);
 //        if (flash_open) {
 //            ibtnFlash.setSelected(true);
 //        } else {
@@ -251,7 +246,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 //            ibtnLight.setSelected(false);
 //        }
         if (nodeList.size() > 0) {
-
 //            if (light_open) {
 //                ibtnLight.setSelected(true);
 //            } else {
@@ -275,7 +269,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     @Override
     public void onStop() {
         super.onStop();
-        timer.cancel();
+        if(timer!=null){
+            timer.cancel();
+        }
     }
 
     private void loadImage() {
@@ -585,9 +581,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 timer =null;
             }
             timer = new Timer();
-            timer.schedule(new timeTask(),500,1000);
+            timer.schedule(new timeTask(),500,1500);
         } else {
-            tvDevice.setText("无设备");
+            tvDevice.setText(R.string.No_equipment);
             if(timer!=null){
                 timer.cancel();
                 timer =null;
@@ -610,9 +606,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     mNormalPopup.dismiss();
                 }
                 LightControl.sendSearchLightParamMessage(selectMesh);
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ConvertUtils.dp2px(180)
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ConvertUtils.dp2px(180)
                         , ConvertUtils.dp2px(60));
-                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
                 lightInfoView.setLayoutParams(layoutParams);
                 flControl.removeView(lightInfoView);
                 flControl.addView(lightInfoView);
@@ -707,7 +703,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void cctChange(int value) {
                 currentCCT = (byte) (value / 100);
-                spUtils.put("currentCCT", (int) currentCCT);
+                LogUtils.dTag("cctChange","currentCCT = " + currentCCT);
                 if (isSent) {
                     handler.postDelayed(sentFlashRunnable, 300);
                     isSent = false;
@@ -718,7 +714,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void evChange(float value) {
                 currentEV = value;
-                spUtils.put("currentEV", currentEV);
                 LightControl.sendFlashEvMeshMessage(LightControl.getEvsend(currentEV), currentCCT, currentDeviceMesh);
             }
         });
@@ -761,7 +756,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                     v.setSelected(true);
                     LightControl.sendLightStatusMessage(0, currentDeviceMesh);
                     light_open = true;
-                    spUtils.put("light_open", true);
                 }
             }
         });
@@ -774,7 +768,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 ibtnFlash.setSelected(false);
                 llControl.setVisibility(View.VISIBLE);
                 flash_open = false;
-                spUtils.put("flash_open", false);
             }
         });
 
@@ -845,21 +838,21 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         checkedTextMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkedTextMe.isChecked()) {
-                    mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_AUTO);
-                } else {
-                    if (!RomUtils.isHuawei()) {
-                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
-                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_MODE, CaptureRequest.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX);
-                        colorTemp = 3000;
-                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_GAINS, PublicUtil.colorTemperature(colorTemp));
-                    }
-                }
-                try {
-                    mCaptureSession.setRepeatingRequest(mPreviewCaptuRerequestBuilder.build(), mCameraCaptureSessionCaptureCallback, mBackgroundHandler);
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
-                }
+//                if (checkedTextMe.isChecked()) {
+//                    mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_AUTO);
+//                } else {
+//                    if (!RomUtils.isHuawei()) {
+//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
+//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_MODE, CaptureRequest.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX);
+//                        colorTemp = 3000;
+//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_GAINS, PublicUtil.colorTemperature(colorTemp));
+//                    }
+//                }
+//                try {
+//                    mCaptureSession.setRepeatingRequest(mPreviewCaptuRerequestBuilder.build(), mCameraCaptureSessionCaptureCallback, mBackgroundHandler);
+//                } catch (CameraAccessException e) {
+//                    e.printStackTrace();
+//                }
                 checkedTextMe.setChecked(!checkedTextMe.isChecked());
             }
         });
@@ -1400,7 +1393,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
                 mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
                 try {
                     mCaptureSession.setRepeatingRequest(mPreviewCaptuRerequestBuilder.build(), mCameraCaptureSessionCaptureCallback, mBackgroundHandler);
-                } catch (CameraAccessException ee) {
+                } catch (Exception ee) {
                     ee.printStackTrace();
                 }
             }
@@ -1711,9 +1704,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 
     static {
         MeshStatus.Container.register(0x0211F1, VendorMessage.class);
-    }
-    private void changeLayoutOrientation(int orientation) {
-
     }
 
     //    private void setRotationAnimation(float start, float end) {

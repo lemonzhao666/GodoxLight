@@ -83,30 +83,31 @@ public class FlashControlLayout extends LinearLayout {
             }
         });
     }
+
     public void setCCT(int cct) {
-        lightControl.setScrollPosition(cct - 2800);
+        lightControl.setScrollPosition(6500 - cct);
     }
 
     public void setEV(float ev) {
-        if(ev == 2){
-           rgEV.check(R.id.rbtn_1);
-       }else if(ev == 1.5){
+        if (ev == 2) {
+            rgEV.check(R.id.rbtn_1);
+        } else if (ev == 1.5) {
             rgEV.check(R.id.rbtn_2);
-       }else if(ev == 1f){
+        } else if (ev == 1f) {
             rgEV.check(R.id.rbtn_3);
-       }else if(ev == 0.5f){
+        } else if (ev == 0.5f) {
             rgEV.check(R.id.rbtn_4);
-       }else if(ev == 0f){
+        } else if (ev == 0f) {
             rgEV.check(R.id.rbtn_5);
-       }else if(ev == -0.5f){
+        } else if (ev == -0.5f) {
             rgEV.check(R.id.rbtn_6);
-       }else if(ev == -1f){
+        } else if (ev == -1f) {
             rgEV.check(R.id.rbtn_7);
-       }else if(ev == -1.5f){
+        } else if (ev == -1.5f) {
             rgEV.check(R.id.rbtn_8);
-       }else if(ev == -2f){
+        } else if (ev == -2f) {
             rgEV.check(R.id.rbtn_9);
-       }
+        }
     }
 
     public void setOnCloseControlLayoutListener(OnCloseControlLayoutListener onCloseControlLayoutListener) {

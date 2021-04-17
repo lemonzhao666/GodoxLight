@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.godox.light.R;
 
 public class LightControlLayout extends LinearLayout {
@@ -80,7 +81,8 @@ public class LightControlLayout extends LinearLayout {
     }
 
     public void setCCT(int cct) {
-        lightControl.setScrollPosition(cct - 2800);
+        LogUtils.dTag("cct","cct= "+cct);
+        lightControl.setScrollPosition(6500 - cct);
     }
 
     public interface OnCloseControlLayoutListener {

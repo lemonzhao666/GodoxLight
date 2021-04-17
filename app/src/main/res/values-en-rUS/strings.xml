@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GodoxLight</string>
+    <string name="app_name">RFLedFlash</string>
     <string name="create_account">Create account</string>
     <string name="fogot_your_password">fogot your password?</string>
     <string name="email_address">Email address</string>
@@ -73,4 +73,18 @@
     <string name="SimplifiedChinese">Simplified Chinese</string>
     <string name="followingsystem">Following System</string>
     <string name="firmwareupdate">Firmware update</string>
+    <string name="update_new_version">Upgrade to new version</string>
+    <string name="Firmware_update">Firmware Update</string>
+    <string name="Device_firmware_version">Device firmware version：</string>
+    <string name="Start_the_upgrade">Start the upgrade</string>
+    <string name="new_version_tip">There is a new version to upgrade, a new version：</string>
+    <string name="Upgrade_Complete">Upgrade Complete</string>
+    <string name="Upgrade_failed">Upgrade failed</string>
+    <string name="Upgrade_progress">Upgrade progress：</string>
+    <string name="Download_failed">Download failed</string>
+    <string name="Start_downloading">Start downloading</string>
+    <string name="Downloading">Downloading：</string>
+    <string name="Upgrade_file_error">Upgrade file error</string>
+    <string name="No_equipment">No equipment</string>
+    <string name="no_online_device">No online device</string>
 </resources>

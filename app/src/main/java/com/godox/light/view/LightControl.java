@@ -38,13 +38,20 @@ public class LightControl extends FrameLayout {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 scrollYY = scrollY;
+//                if(scrollYY<0){
+//                    scrollYY = 0;
+//                }
+//                if(scrollYY>3700){
+//                    scrollYY=3700;
+//                }
                 LogUtils.dTag(TAG,"scrollYY = "+scrollYY+" isScroll = "+isScroll);
                 if (scrollYY % 100 <= 50 && isScroll) {
                     if (onLightChange != null)
-                        onLightChange.change((scrollYY / 100) * 100 + 2800);
+                        onLightChange.change(6500 - (scrollYY / 100) * 100);
                 } else {
                     if (onLightChange != null) {
-                        onLightChange.change(((scrollYY / 100) + 1) * 100 + 2800);
+                        LogUtils.dTag(TAG,"value = "+(6500 - ((scrollYY / 100) + 1) * 100));
+                        onLightChange.change(6500 - ((scrollYY / 100) + 1) * 100 );
                     }
                 }
             }

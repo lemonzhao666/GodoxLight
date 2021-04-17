@@ -2,6 +2,6 @@
 <paths>
     <external-path path="Android/data/${applicationId}/" name="files_root" />
     <external-path name="external_files" path="."/>
-    <external-path name="godox-share" path="."/>
+    <external-path name="godox-light" path="."/>
 </paths>
 

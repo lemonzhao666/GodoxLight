@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 
@@ -40,7 +41,7 @@ public class CountdownView extends View {
      * 展示的数字
      */
     private int showNumber;
-    private FrameLayout framControl;
+    private RelativeLayout framControl;
 
     /**
      * 动画
@@ -186,7 +187,7 @@ public class CountdownView extends View {
         animation.play(showNumberAnimator);
         return animation;
     }
-    public void setFramControl(FrameLayout framControl){
+    public void setFramControl(RelativeLayout framControl){
         this.framControl = framControl;
     }
 

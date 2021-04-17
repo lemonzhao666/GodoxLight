@@ -58,7 +58,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
 
     @Override
     public void initView(Bundle savedInstanceState, View view) {
-        setTitle("固件升级");
+        setTitle(getString(R.string.Firmware_update));
         textProgressBar = findViewById(R.id.btn_start_ota);
         tvVersionInfo = findViewById(R.id.tv_version_info);
         newVersionInfo = findViewById(R.id.tv_new_version_info);
@@ -98,27 +98,27 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
             VendorMessage vendorMessage = (VendorMessage) ((StatusNotificationEvent) event).getNotificationMessage().getStatusMessage();
             byte[] dataArray = vendorMessage.getDataParam();
             currentVersion = dataArray[4];
-            tvVersionInfo.setText("设备固件版本："+currentVersion);
+            tvVersionInfo.setText(getString(R.string.Device_firmware_version)+currentVersion);
             if (currentVersion < newVersion) {
                 textProgressBar.setVisibility(View.VISIBLE);
-                textProgressBar.setTextValue("开始升级");
+                textProgressBar.setTextValue(getString(R.string.Start_the_upgrade));
                 newVersionInfo.setVisibility(View.VISIBLE);
-                newVersionInfo.setText("有新版本可以升级,新版本："+newVersion);
+                newVersionInfo.setText(getString(R.string.new_version_tip)+newVersion);
             }
             LogUtils.dTag(TAG, "currentVersion  = " + PublicUtil.toHexString(dataArray));
         }
         switch (event.getType()) {
             case GattOtaEvent.EVENT_TYPE_OTA_SUCCESS:
-                setTextProgressBar("升级完成",false);
+                setTextProgressBar(getString(R.string.Upgrade_Complete),false);
                 MeshService.getInstance().idle(false);
                 break;
             case GattOtaEvent.EVENT_TYPE_OTA_FAIL:
-                setTextProgressBar("升级失败",true);
+                setTextProgressBar(getString(R.string.Upgrade_failed),true);
                 MeshService.getInstance().idle(true);
                 break;
             case GattOtaEvent.EVENT_TYPE_OTA_PROGRESS:
                 int progress = ((GattOtaEvent) event).getProgress();
-                setTextProgressBar("升级进度：" + progress + "%" ,false);
+                setTextProgressBar(getString(R.string.Upgrade_progress) + progress + "%" ,false);
                 textProgressBar.setProgress(progress);
                 break;
         }
@@ -145,7 +145,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        setTextProgressBar("下载失败" ,true);
+                        setTextProgressBar(getString(R.string.Download_failed) ,true);
                     }
                 });
             }
@@ -209,7 +209,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setTextProgressBar("开始下载" ,false);
+                setTextProgressBar(getString(R.string.Start_downloading) ,false);
             }
         });
 
@@ -220,7 +220,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setTextProgressBar("下载中：" + progress + "%",false);
+                setTextProgressBar(getString(R.string.Downloading) + progress + "%",false);
                 textProgressBar.setProgress(progress);
             }
         });
@@ -245,7 +245,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    setTextProgressBar("升级文件错误",true);
+                    setTextProgressBar(getString(R.string.Upgrade_file_error),true);
                 }
             });
         }
@@ -256,7 +256,7 @@ public class DeviceOtaActivity extends BaseBackActivity implements EventListener
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                setTextProgressBar("下载失败",true);
+                setTextProgressBar(getString(R.string.Download_failed),true);
             }
         });
     }

@@ -72,8 +72,8 @@ android {
             }
         }
         beta {
-            versionCode 8
-            versionName "1.0.8"
+            versionCode 10
+            versionName "1.0.10"
             buildConfigField "boolean", "IS_PUBLIC", 'false'
             ndk {
                 abiFilters 'armeabi-v7a'

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GodoxLight</string>
+    <string name="app_name">RFLedFlash</string>
     <string name="create_account">创建账户</string>
     <string name="fogot_your_password">忘记密码?</string>
     <string name="email_address">邮箱地址</string>
@@ -73,4 +73,18 @@
     <string name="SimplifiedChinese">简体中文</string>
     <string name="followingsystem">跟随系统</string>
     <string name="firmwareupdate">固件升级</string>
+    <string name="update_new_version">升级新版本</string>
+    <string name="Firmware_update">固件升级</string>
+    <string name="Device_firmware_version">设备固件版本：</string>
+    <string name="Start_the_upgrade">开始升级</string>
+    <string name="new_version_tip">有新版本可以升级,新版本：</string>
+    <string name="Upgrade_Complete">升级完成</string>
+    <string name="Upgrade_failed">升级失败</string>
+    <string name="Upgrade_progress">升级进度：</string>
+    <string name="Download_failed">下载失败</string>
+    <string name="Start_downloading">开始下载</string>
+    <string name="Downloading">下载中：</string>
+    <string name="Upgrade_file_error">升级文件错误</string>
+    <string name="No_equipment">无设备</string>
+    <string name="no_online_device">无在线设备</string>
 </resources>
