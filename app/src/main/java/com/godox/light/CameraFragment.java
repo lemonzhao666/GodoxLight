@@ -1,5 +1,7 @@
 package com.godox.light;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -43,6 +45,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
@@ -211,7 +214,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private TextView tvCCT;
     private boolean isPopupDismiss;
     private Timer timer;
-    private PreviewRender beautyRender;
+    private BaseRender mRender;
+    private boolean isBeauty;
 
     public static CameraFragment newInstance() {
         return new CameraFragment();
@@ -220,8 +224,10 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 
     @Override
     public void onResume() {
-        super.onResume();
-
+        if (rendererSet) {
+            glTextureView.onResume();
+            mRender.setPositionMatrix(mFacing == CameraCharacteristics.LENS_FACING_FRONT);
+        }
         loadImage();
         if (mOrientationListener.canDetectOrientation()) {
             mOrientationListener.enable();
@@ -229,10 +235,10 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         startBackgroundThread();
         setUpCameraOutput();
         if (glTextureView.isAvailable()) {
-            LogUtils.dTag(TAG,"glTextureView.isAvailable() = true");
+            LogUtils.dTag(TAG, "glTextureView.isAvailable() = true");
             openCamera();
         } else {
-            glTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+            glTextureView.addSurfaceTextureListener(mSurfaceTextureListener);
         }
         TelinkMeshApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
         TelinkMeshApplication.getInstance().addEventListener(NodeStatusChangedEvent.EVENT_TYPE_NODE_STATUS_CHANGED, this);
@@ -241,45 +247,15 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         updataNodeInfo();
         adapter.notifyDataSetChanged();
         MeshService.getInstance().autoConnect(new AutoConnectParameters());
-//        if (flash_open) {
-//            ibtnFlash.setSelected(true);
-//        } else {
-//            ibtnFlash.setSelected(false);
-//        }
-//        if (light_open) {
-//            ibtnLight.setSelected(true);
-//        } else {
-//            ibtnLight.setSelected(false);
-//        }
-        if (nodeList.size() > 0) {
-//            if (light_open) {
-//                ibtnLight.setSelected(true);
-//            } else {
-//                ibtnLight.setSelected(false);
-//            }
-//            if (light_open) {
-//                LightControl.sendLightStatusMessage(0, currentDeviceMesh);
-//                handler.postDelayed(sentRunnable, 300);
-//            } else {
-//                LightControl.sendLightStatusMessage(1, currentDeviceMesh);
-//            }
-//            if (flash_open) {
-//                LightControl.sendFlashStatusMessage(0, currentDeviceMesh);
-//                handler.postDelayed(sentFlashRunnable, 300);
-//            } else {
-//                LightControl.sendFlashStatusMessage(1, currentDeviceMesh);
-//            }
-            if (rendererSet) {
-                glTextureView.onResume();
-            }
-        }
+        super.onResume();
     }
+
     @Override
     public void onStop() {
-        super.onStop();
-        if(timer!=null){
+        if (timer != null) {
             timer.cancel();
         }
+        super.onStop();
     }
 
     private void loadImage() {
@@ -411,8 +387,9 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         }
         glTextureViewW = (int) (mPreviewSize.getWidth() * (ScreenUtils.getScreenWidth() / ((float) mPreviewSize.getWidth())));
         glTextureViewH = (int) (mPreviewSize.getHeight() * (ScreenUtils.getScreenWidth() / ((float) mPreviewSize.getWidth())));
-
-//        glTextureView.setAspectRatio(glTextureViewW, glTextureViewH);
+        LogUtils.dTag(TAG, "glTextureViewW = " + glTextureViewW + "  glTextureViewH = " + glTextureViewH
+                + "  mPreviewSize.getHeight() = " + mPreviewSize.getHeight() + "  mPreviewSize.getWidth() = " + mPreviewSize.getWidth());
+        glTextureView.setAspectRatio(glTextureViewW, glTextureViewH);
         configCameraUI(glTextureViewW, glTextureViewH);
         mImageSaveReader = ImageReader.newInstance(mOutImageSize.getHeight(), mOutImageSize.getWidth(), ImageFormat.JPEG, /*maxImages*/2);
         mImageSaveReader.setOnImageAvailableListener(mOnImageSaveAvailableListener, mBackgroundHandler);
@@ -449,7 +426,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 
     @Override
     public void initView(Bundle savedInstanceState, final View view) {
-        glTextureView = view.findViewById(R.id.textureview);
+
+        glTextureView = view.findViewById(R.id.glTextureview);
         ibtnTake = view.findViewById(R.id.ibtn_take);
         ibtnSwitch = view.findViewById(R.id.ibtn_switch);
         ivSetting = view.findViewById(R.id.iv_setting);
@@ -492,27 +470,17 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         flPreview.addView(focusView);
         checkView.setTitle("Auto", "Manual");
         rgAWB.check(R.id.rb_awb1);
-//        if (supportsEs2()) {
         glTextureView.setEGLContextClientVersion(2);
-        beautyRender = new PreviewRender(mActivity);
-        glTextureView.setRenderer(beautyRender);
+        if (isBeauty) {
+            mRender = new BeautyRender(mContext, R.raw.texture_vertex_shader, R.raw.beauty);
+        } else {
+            mRender = new PreviewRender(mContext, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
+        }
+        glTextureView.setRenderer(mRender);
         glTextureView.setRenderMode(GLTextureView.RENDERMODE_WHEN_DIRTY);
         rendererSet = true;
-//        }
     }
-    private boolean supportsEs2() {
-        ActivityManager activityManager = (ActivityManager)mActivity.getSystemService(Context.ACTIVITY_SERVICE);
-        ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-        final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
-                && (Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")));
 
-        return supportsEs2;
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         updataNodeInfo();
@@ -606,17 +574,17 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             MeshNodeList.getInstance().setMeshNodeList(nodeList);
             MeshNodeList.getInstance().setCurrentDeviceMesh(currentDeviceMesh);
             tvDevice.setText(currentDeviceName);
-            if(timer!=null){
+            if (timer != null) {
                 timer.cancel();
-                timer =null;
+                timer = null;
             }
             timer = new Timer();
-            timer.schedule(new timeTask(),500,1500);
+            timer.schedule(new timeTask(), 500, 1500);
         } else {
             tvDevice.setText(R.string.No_equipment);
-            if(timer!=null){
+            if (timer != null) {
                 timer.cancel();
-                timer =null;
+                timer = null;
             }
 
             MeshNodeList.getInstance().setCurrentDeviceMesh(-1);
@@ -733,7 +701,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             @Override
             public void cctChange(int value) {
                 currentCCT = (byte) (value / 100);
-                LogUtils.dTag("cctChange","currentCCT = " + currentCCT);
+                LogUtils.dTag("cctChange", "currentCCT = " + currentCCT);
                 if (isSent) {
                     handler.postDelayed(sentFlashRunnable, 300);
                     isSent = false;
@@ -868,21 +836,16 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         checkedTextMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (checkedTextMe.isChecked()) {
-//                    mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_AUTO);
-//                } else {
-//                    if (!RomUtils.isHuawei()) {
-//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);
-//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_MODE, CaptureRequest.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX);
-//                        colorTemp = 3000;
-//                        mPreviewCaptuRerequestBuilder.set(CaptureRequest.COLOR_CORRECTION_GAINS, PublicUtil.colorTemperature(colorTemp));
-//                    }
-//                }
-//                try {
-//                    mCaptureSession.setRepeatingRequest(mPreviewCaptuRerequestBuilder.build(), mCameraCaptureSessionCaptureCallback, mBackgroundHandler);
-//                } catch (CameraAccessException e) {
-//                    e.printStackTrace();
-//                }
+                isBeauty = checkedTextMe.isChecked() ? false : true;
+                mRender.releaseProgram();
+                if (isBeauty) {
+                    mRender = new BeautyRender(mContext, R.raw.texture_vertex_shader, R.raw.beauty);
+
+                } else {
+                    mRender = new PreviewRender(mContext, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
+                }
+                glTextureView.setRenderer(mRender);
+                spUtils.put("isBeauty", isBeauty);
                 checkedTextMe.setChecked(!checkedTextMe.isChecked());
             }
         });
@@ -1103,12 +1066,17 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     }
 
     private void switchCamera() {
-
         if (mFacing == CameraCharacteristics.LENS_FACING_BACK) {
             mFacing = CameraCharacteristics.LENS_FACING_FRONT;
+//            previewRender.setPositionMatrix(true);
+            mRender.setPositionMatrix(true);
         } else {
             mFacing = CameraCharacteristics.LENS_FACING_BACK;
+            mRender.setPositionMatrix(false);
         }
+//        ObjectAnimator flipAnima = ObjectAnimator.ofFloat(glTextureView, "rotationY", 0f, 360f);
+//        flipAnima.setDuration(500);
+//        flipAnima.start();
         isRegionAF = false;
         isManualAe = false;
         awbType = 0;
@@ -1184,24 +1152,23 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 
     private void createCameraPreviewSession() {
         try {
-            SurfaceTexture surfaceTexture = glTextureView.getSurfaceTexture();
-            LogUtils.dTag(TAG, "mPreviewSize.getWidth() " + mPreviewSize.getHeight() + " mPreviewSize.getWidth() = " + mPreviewSize.getWidth());
-            surfaceTexture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
-            surface = new Surface(surfaceTexture);
-//            SurfaceTexture surfaceTexture = beautyRender.getSurfaceTexture();
+//            SurfaceTexture surfaceTexture = glTextureView.getSurfaceTexture();
+//            LogUtils.dTag(TAG, "mPreviewSize.getWidth() " + mPreviewSize.getHeight() + " mPreviewSize.getWidth() = " + mPreviewSize.getWidth());
 //            surfaceTexture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
-//            surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
-//                @Override
-//                public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-//                    // 每获取到一帧数据时请求OpenGL ES进行渲染
-//                    LogUtils.dTag(TAG,"onFrameAvailable");
-//                    glTextureView.requestRender();
-//                }
-//            });
 //            surface = new Surface(surfaceTexture);
-//            mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageSaveReader.getSurface()), mCameraCaptureSessionStateCallback, mBackgroundHandler);
-            mCameraDevice.createCaptureSession(Arrays.asList(surface), mCameraCaptureSessionStateCallback, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+            SurfaceTexture surfaceTexture = mRender.getSurfaceTexture();
+            surfaceTexture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
+                @Override
+                public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+                    // 每获取到一帧数据时请求OpenGL ES进行渲染
+                    LogUtils.dTag(TAG, "onFrameAvailable");
+                    glTextureView.requestRender();
+                }
+            });
+            surface = new Surface(surfaceTexture);
+            mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageSaveReader.getSurface()), mCameraCaptureSessionStateCallback, mBackgroundHandler);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1235,12 +1202,12 @@ public class CameraFragment extends BaseFragment implements EventListener<String
             tvCCT.setText("CCT: " + (currentCCT * 100) + "k");
             tvDIM.setText(currentDIM + "%");
             tvEV.setText(currentEV + "");
-            if(flashControlLayout.getVisibility() == View.VISIBLE){
-                flashControlLayout.setCCT(currentCCT*100);
+            if (flashControlLayout.getVisibility() == View.VISIBLE) {
+                flashControlLayout.setCCT(currentCCT * 100);
                 flashControlLayout.setEV(currentEV);
             }
-            if(lightControlLayout.getVisibility() == View.VISIBLE){
-                lightControlLayout.setCCT(currentCCT*100);
+            if (lightControlLayout.getVisibility() == View.VISIBLE) {
+                lightControlLayout.setCCT(currentCCT * 100);
                 lightControlLayout.setDIM(currentDIM);
             }
             LogUtils.dTag(TAG, "dataArray  = " + PublicUtil.toHexString(dataArray));
@@ -1453,32 +1420,30 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         }
 
 
-
     }
 
     class SurfaceTextureListener implements GLTextureView.SurfaceTextureListener {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-            LogUtils.dTag(TAG,"onSurfaceTextureAvailable");
-                openCamera();
-
+            LogUtils.dTag(TAG, "onSurfaceTextureAvailable");
+            openCamera();
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
-            LogUtils.dTag(TAG,"onSurfaceTextureSizeChanged");
+            LogUtils.dTag(TAG, "onSurfaceTextureSizeChanged");
         }
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-            LogUtils.dTag(TAG,"onSurfaceTextureDestroyed");
+            LogUtils.dTag(TAG, "onSurfaceTextureDestroyed");
             return false;
         }
 
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-            LogUtils.dTag(TAG,"onSurfaceTextureUpdated");
+            LogUtils.dTag(TAG, "onSurfaceTextureUpdated");
         }
     }
 

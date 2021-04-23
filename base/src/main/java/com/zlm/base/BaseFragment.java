@@ -52,14 +52,13 @@ public abstract class BaseFragment extends Fragment implements IBaseView {
         super.onViewCreated(view, savedInstanceState);
         Bundle bundle = getArguments();
         initData(bundle);
-
+        initView(savedInstanceState, view);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = getActivity();
-        initView(savedInstanceState, view);
         doBusiness();
         initListener();
     }

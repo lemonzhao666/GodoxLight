@@ -5,24 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
-fafa
     <FrameLayout
         android:id="@+id/fl_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
-
         <com.godox.light.view.GLTextureView
-            android:id="@+id/textureview"
+            android:id="@+id/glTextureview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
-
         <com.godox.light.view.GridLineView
             android:id="@+id/gridview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
+
     </FrameLayout>
 
     <com.godox.light.view.CountdownView
