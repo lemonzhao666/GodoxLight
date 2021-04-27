@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_start_ota"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="88dp"
+        >
+
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="@mipmap/logo"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RF1"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/tv_version_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/gray"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_new_version_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            />
+    </LinearLayout>
+
+
+
+    <com.godox.light.view.TextProgressBar
+        android:id="@+id/btn_start_ota"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        style="@style/horizontal_progressbar"
+        android:text="@string/update_new_version"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:background="@drawable/rectangle_button_bg"
+        android:theme="@style/AccentButton" />
+
+</RelativeLayout>

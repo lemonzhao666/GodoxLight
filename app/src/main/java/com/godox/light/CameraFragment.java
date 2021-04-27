@@ -1,12 +1,8 @@
 package com.godox.light;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ConfigurationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -29,7 +25,6 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -45,7 +40,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
@@ -67,6 +61,9 @@ import com.blankj.utilcode.util.RomUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ThreadUtils;
+import com.godox.light.filter.BeautyFilter;
+import com.godox.light.filter.GpuFilter;
+import com.godox.light.filter.PreviewFilter;
 import com.godox.light.view.CheckView;
 import com.godox.light.view.ColorSelectView;
 import com.godox.light.view.CountdownView;
@@ -203,7 +200,6 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private boolean isSent = true;
     private boolean flash_open;
     private boolean light_open;
-    private boolean rendererSet;
     private boolean isTakeComplete = true;
     private TextView tvDevice;
     private QMUIPopup mNormalPopup;
@@ -214,8 +210,8 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private TextView tvCCT;
     private boolean isPopupDismiss;
     private Timer timer;
-    private BaseRender mRender;
-    private boolean isBeauty;
+    private GpuFilter mFilter;
+    private GpuRenderer renderer;
 
     public static CameraFragment newInstance() {
         return new CameraFragment();
@@ -224,10 +220,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 
     @Override
     public void onResume() {
-        if (rendererSet) {
-            glTextureView.onResume();
-            mRender.setPositionMatrix(mFacing == CameraCharacteristics.LENS_FACING_FRONT);
-        }
+        glTextureView.onResume();
         loadImage();
         if (mOrientationListener.canDetectOrientation()) {
             mOrientationListener.enable();
@@ -297,9 +290,7 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         mOrientationListener.disable();
         closeCamera();
         stopBackgroundThread();
-        if (rendererSet) {
-            glTextureView.onPause();
-        }
+        glTextureView.onPause();
         super.onPause();
     }
 
@@ -471,14 +462,11 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         checkView.setTitle("Auto", "Manual");
         rgAWB.check(R.id.rb_awb1);
         glTextureView.setEGLContextClientVersion(2);
-        if (isBeauty) {
-            mRender = new BeautyRender(mContext, R.raw.texture_vertex_shader, R.raw.beauty);
-        } else {
-            mRender = new PreviewRender(mContext, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
-        }
-        glTextureView.setRenderer(mRender);
+        mFilter = new PreviewFilter(mContext, R.raw.preview_vertex_shader, R.raw.preview_fragment_shader);
+        mFilter.isFont = false ;
+        renderer = new GpuRenderer(mFilter);
+        glTextureView.setRenderer(renderer);
         glTextureView.setRenderMode(GLTextureView.RENDERMODE_WHEN_DIRTY);
-        rendererSet = true;
     }
 
     @Override
@@ -836,15 +824,14 @@ public class CameraFragment extends BaseFragment implements EventListener<String
         checkedTextMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isBeauty = checkedTextMe.isChecked() ? false : true;
-                mRender.releaseProgram();
+                boolean isBeauty = !checkedTextMe.isChecked();
                 if (isBeauty) {
-                    mRender = new BeautyRender(mContext, R.raw.texture_vertex_shader, R.raw.beauty);
-
+                    mFilter = new BeautyFilter(mContext, R.raw.beauty_vertex_shader, R.raw.beauty_fragment_shader);
                 } else {
-                    mRender = new PreviewRender(mContext, R.raw.texture_vertex_shader, R.raw.texture_fragment_shader);
+                    mFilter = new PreviewFilter(mContext, R.raw.preview_vertex_shader, R.raw.preview_fragment_shader);
                 }
-                glTextureView.setRenderer(mRender);
+                mFilter.isFont = mFacing == CameraCharacteristics.LENS_FACING_FRONT;
+                renderer.setFilter(mFilter);
                 spUtils.put("isBeauty", isBeauty);
                 checkedTextMe.setChecked(!checkedTextMe.isChecked());
             }
@@ -1068,11 +1055,10 @@ public class CameraFragment extends BaseFragment implements EventListener<String
     private void switchCamera() {
         if (mFacing == CameraCharacteristics.LENS_FACING_BACK) {
             mFacing = CameraCharacteristics.LENS_FACING_FRONT;
-//            previewRender.setPositionMatrix(true);
-            mRender.setPositionMatrix(true);
+            mFilter.isFont = true;
         } else {
             mFacing = CameraCharacteristics.LENS_FACING_BACK;
-            mRender.setPositionMatrix(false);
+            mFilter.isFont = false;
         }
 //        ObjectAnimator flipAnima = ObjectAnimator.ofFloat(glTextureView, "rotationY", 0f, 360f);
 //        flipAnima.setDuration(500);
@@ -1156,13 +1142,11 @@ public class CameraFragment extends BaseFragment implements EventListener<String
 //            LogUtils.dTag(TAG, "mPreviewSize.getWidth() " + mPreviewSize.getHeight() + " mPreviewSize.getWidth() = " + mPreviewSize.getWidth());
 //            surfaceTexture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
 //            surface = new Surface(surfaceTexture);
-            SurfaceTexture surfaceTexture = mRender.getSurfaceTexture();
+            SurfaceTexture surfaceTexture = renderer.getSurfaceTexture();
             surfaceTexture.setDefaultBufferSize(mPreviewSize.getHeight(), mPreviewSize.getWidth());
             surfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
                 @Override
                 public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-                    // 每获取到一帧数据时请求OpenGL ES进行渲染
-                    LogUtils.dTag(TAG, "onFrameAvailable");
                     glTextureView.requestRender();
                 }
             });

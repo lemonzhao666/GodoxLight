@@ -1,5 +1,6 @@
 package com.zlm.base;
 
+import android.opengl.GLES20;
 import android.util.Log;
 
 import com.blankj.utilcode.util.ThreadUtils;

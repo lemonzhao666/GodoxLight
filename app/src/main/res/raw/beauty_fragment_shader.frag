@@ -204,7 +204,6 @@ void main() {
 
         smoothColor = mix(centralColor, smoothColor, pow(centralColor.g, 0.33));
         smoothColor = mix(centralColor, smoothColor, pow(centralColor.g, 0.39));
-
         smoothColor = mix(centralColor, smoothColor, opacity);
 
         gl_FragColor = vec4(pow(smoothColor, vec3(0.96)), 1.0);
